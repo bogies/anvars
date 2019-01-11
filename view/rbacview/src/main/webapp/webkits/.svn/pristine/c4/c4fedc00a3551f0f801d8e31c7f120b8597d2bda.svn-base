@@ -1,0 +1,67 @@
+angular.module("ngAntsModules", []).directive("ngZtree", ["$timeout", function (e) {
+    /**
+     * zTree 实现
+     * 相关属性:
+     * z-setting: ztree设置参数
+     */
+    var t = {
+        restrict: "A",
+        link: function (t, n, r) {
+            e(function () {
+                $.fn.zTree.init(n, t[r.zSetting], t[r.zNodes]);
+            })
+        }
+    };
+    return t;
+}]).directive("ngPopZtree", [
+    /**
+     * zTree弹出实现
+     * 样关属性: 
+     * bind-tree: 设置绑定的zTree弹出dom
+     * tree_check: ztree是否为多选, 为多选时点击节点不收回
+     */
+    function () {
+        var e = {
+            restrict: "A",
+            link: function (e, t, n) {
+                var r = function (e) {
+                    if (!(n.treeCheck && $(e.target).parents("#" + n.bindTree).length > 0) && e.target.id != t.context.id && e.target.id != n.bindTree) {
+                        var i = $("#" + n.bindTree);
+                        i.fadeOut("fast"), $("body").unbind("mousedown", r);
+                    }
+                };
+                t.click(function () {
+                    var e = t.offset(),
+                        i = $("#" + n.bindTree),
+                        o = t.outerHeight();
+                    i.css({
+                        left: e.left + "px",
+                        top: parseInt(e.top) + o + "px"
+                    }).slideDown("fast"), $("body").bind("mousedown", r);
+                })
+            }
+        };
+        return e
+    }
+]).directive("ngPagehelperBar", [
+    /**
+     * mybatis PageHelper 的翻页工具条
+     * 相关属性:
+     * pagebar-html: pagerbar对应的模板地址, 与tommy显示格式相同
+     * goto-page: 翻页对应的处理函数, 传参: 目的页码
+     */
+    function () {
+        var e = {
+            restrict: "AE",
+            replace: !0,
+            link: function (e, t, n) {
+                e.getContentUrl = function () {
+                    return n.pagebarHtml;
+                }, e.ngPageHelperGoto = function (t) {
+                    e[n.gotoPage](t);
+                }, e.ngPageHelperData = e[n.pageInfo]
+            }, template: '<div ng-include="getContentUrl()"></div>'
+        };
+        return e
+    }
+]);

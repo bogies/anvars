@@ -1,0 +1,1 @@
+window.StringUtils={trim:function(n){return n&&""!=n?n.replace(/(^\s*)|(\s*$)/g,""):""},isUndefined:function(n){return"undefined"==typeof n},isNull:function(n){return!n},isEmpty:function(n){return!n||""==n},isBlank:function(n){return""==this.trim(n)},isNotBlank:function(n){return""!=this.trim(n)}};

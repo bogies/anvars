@@ -1,0 +1,320 @@
+/*
+	uumcss.css
+	Author:Hugh Wang
+	2016-12-28
+	For Unifier User Management
+	defined the own class style
+*/
+article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
+html,body{
+      overflow:hidden;
+      height:100%;
+      margin:0;
+      padding: 0;
+    }
+    html{
+      _padding:80px 0;
+    }
+    li{list-style-type: none}
+    #hd{
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:80px;
+      background:#999;
+    }
+    #bd{
+      position:absolute;
+      top:90px;
+      right:0;
+      bottom:1px;
+      left:0;
+      overflow:hidden;
+      width:100%;
+      _height:100%;
+    }
+    #main_side{
+      position:absolute;
+      top:0;
+      left:0;
+      bottom:0;
+      overflow-x:none;
+      width:210px;
+      /*margin-left:80px;*/
+      _height:100%;
+      background:#eafeff;
+      border-right:2px solid #127fd1;
+      border-top: 1px solid #bdcfdc;
+    }
+    #main_side1{
+      position:absolute;
+      top:0;
+      left:0;
+      bottom:0;
+      overflow:auto;
+      width:190px;
+      /*margin-left:10px;*/
+      _height:100%;
+      background:#fff;
+      border-right:2px solid #ccc;
+    }
+    #main_right{
+      position:absolute;
+      _position:static;
+      top:0;
+      right:0;
+      bottom:0;
+      left:210px;
+      overflow:auto;
+      _height:100%;
+      _margin-left:210px;
+      /*background:#f5f5f5;*/
+    }
+    #content{
+      float: left
+      _overflow:auto;
+      _width:100%;
+      _height:100%;
+    }
+    #content1{
+      float: left
+      _overflow:auto;
+      _width:100%;
+      _height:100%;
+      /*margin-right: 10px;*/
+    }
+    #ft{
+      position:absolute;
+      bottom:0;
+      left:0;
+      width:100%;
+      height:100px;
+      background:#999;
+    }
+.main_head_title{height: 30px;padding:5px 0 2px 0;background: #ccc}
+
+.bw_title{
+  margin:10px 10px 0 10px;
+  font-weight:700;
+  color:#666666;
+  background:#f9f9f9;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e2ebf0'); 
+  background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2ebf0)); 
+  background: -moz-linear-gradient(top, #ffffff, #e2ebf0); 
+  border:1px solid #bdcfdc;
+  border-bottom:none;
+  padding:0 20px 0 20px;
+  height: 32px;
+  line-height: 32px;
+}
+.bw_content{margin-right:10px;border:1px solid #bdcfdc;padding:15px;background:#fff;margin-left:10px;}
+.left_side{position: absolute;width: 80px;z-index: 100;background: #127fd1;height: 100%;float: left;}
+.left_side ul{padding: 0;margin-top:60px;}
+.left_side li{list-style: none;color: #fff;font-weight: 700;font-size: 12px;padding:5px 0;}
+.left_side .libg{background :url("libg.png");}
+.left_side li img{width: 40px;padding-bottom:5px;}
+.top_time{height: 30px;line-height: 30px; border-bottom: 1px solid #ccc;background: #fff;padding-left:20px;font-size: 12px;color: #696969;}
+.leftTopBg{background :url("left_top_bg.png");width: 210px;height: 30px;line-height: 30px;color: #fff}
+.editbutton { 
+display: inline-block; 
+/*zoom: 1;  zoom and *display = ie7 hack for display:inline-block  */
+/**display: inline; */
+vertical-align: baseline; 
+white-space: nowrap;
+margin: 3px 2px 0 0; 
+outline: none; 
+cursor: pointer; 
+text-align: center; 
+text-decoration: none; 
+font: 14px/100% Arial, Helvetica, sans-serif; 
+padding: .5em 2em .55em; 
+-webkit-border-radius: .5em; 
+-moz-border-radius: .5em; 
+border-radius: .5em; 
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+} 
+.editbutton:hover { 
+text-decoration: none; 
+} 
+.editbutton:active { 
+position: relative; 
+} 
+.editbigrounded { 
+-webkit-border-radius: 2em; 
+-moz-border-radius: 2em; 
+border-radius: 2em; 
+} 
+.editmedium {
+font-size: 12px; 
+padding: .5em 1.5em .42em; 
+} 
+.editsmall { 
+font-size: 11px; 
+padding: .5em .2em;
+margin:2px;
+} 
+
+
+.editbtn { 
+color: #606060; 
+border: solid 1px #b7b7b7; 
+background: #ededed; 
+background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#dcdcdc)); 
+background: -moz-linear-gradient(top, #fff, #dcdcdc); 
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dcdcdc'); 
+} 
+.editbtn:hover { 
+color: #ffffff;
+background: #3594d6; 
+border-color: #269abc;
+background: -webkit-gradient(linear, left top, left bottom, from(#51b2ee), to(#3594d6)); 
+background: -moz-linear-gradient(top, #51b2ee, #3594d6); 
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#51b2ee', endColorstr='#3594d6'); 
+} 
+.editbtn:active { 
+color: #606060; 
+border: solid 1px #b7b7b7; 
+background: #ededed; 
+background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#dcdcdc)); 
+background: -moz-linear-gradient(top, #fff, #dcdcdc); 
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dcdcdc'); 
+} 
+.editbtn_disabled { 
+color: #606060; 
+border: solid 1px #b7b7b7; 
+background: #ededed; 
+}
+.seluserul{}
+.seluserul td{float:left;}
+.xl{list-style-type: none;}
+.xt{list-style-type: none;width: 85px;height:62px;padding-top:2px;background:#53a5dd url(/application/views/img/bstx01.png) no-repeat center top;}
+.xt a{color: #f1f1f1;font-size:14px;}
+.xt:hover{list-style-type: none;width: 85px;background:#0f639e url(/application/views/img/bstx02.png) no-repeat center top;}
+.xt:hover a{color: #ffffff;font-size:14px;}
+.xtl{list-style-type: none;width: 85px;background: url(/application/views/img/xxfb01.png) no-repeat center top;}
+.xtl a{color: #f1f1f1;font-size:14px;}
+.xtl:hover{list-style-type: none;width: 85px;background: url(/application/views/img/xxfb02.png) no-repeat center top;}
+.xtl:hover a{color: #ffffff;font-size:14px;}
+
+.bottombg{background: url('<?php echo $webRoot; ?>/img/main/bg.png?1'); height:150px; position:fixed; bottom: 0; width:100%;z-index: 999990}
+.bottombg ul{width: 955px;height:147px;margin:0 auto;padding:0;}
+.bottombg li{list-style-type: none;width:135px; height:116px; float:left; padding:20px}
+.bottomhide{display: none}
+.bottomdown{position: absolute; top: -29px;}
+.ifrcenter{text-align: center;overflow: hidden;}
+
+/*adminlist css style*/
+.al_padding{
+  padding:10px;
+}
+.f5{margin-top:-3px;}
+
+.admintable{font-size: 12px;}
+.admintable thead tr th{height: 32px;line-height: 32px;background: #f0f0f0;text-align: center}
+.admintable tbody tr td{height: 32px;line-height: 32px;text-align: center}
+
+/*一级菜单鼠标划过状态*/
+.menu-first{
+  height:35px;
+  line-height:35px;
+  background:#f9f9f9;
+  background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2ebf0)); 
+  background: -moz-linear-gradient(top, #ffffff, #e2ebf0); 
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e2ebf0'); 
+  /*border-top: 1px solid #b7b7b7;*/
+  border-bottom: 1px solid #acacac;
+  padding: 0;
+  font-size: 14px;
+  font-weight: normal;
+  text-align: left;
+  padding-left:10px;
+  color:#5a5a5a;
+}
+    .menu-first:hover{
+      text-decoration: none;
+      background-color: #d6d4d5;
+      /*border-top: 1px solid #b7b7b7;*/
+      border-bottom: 1px solid #acacac;
+    }
+    /*二级菜单*/
+    .menu-second li a{
+      background-color: #eeeeee;
+      height:31px;
+      line-height:31px;
+      border-top: 1px solid #e7e6e6;
+      border-bottom: 1px solid #e7e6e6;
+      font-size: 12px;
+      color:#444;
+      /*font-weight: bold;*/
+    }
+    /*二级菜单鼠标划过样式*/
+    .menu-second li a:hover {
+      text-decoration: none;
+      background-color: #66c3ec;
+      /*border-right: 3px solid #f8881c;
+      border-left: 3px solid #66c3ec;*/
+      color:#fff;
+    }
+    .menu-second li a.actived {
+      text-decoration: none;
+      background-color: #51b2ee;
+      border-top: 1px solid #269abc;
+      border-bottom: 1px solid #269abc;
+      color:#fff;
+    }
+    /*二级菜单选中状态*/
+    .menu-second-selected {
+      background-color: #66c3ec;
+      height:31px;
+      line-height:31px;
+      border-top: 1px solid #83ceed;
+      border-bottom: 1px solid #83ceed;
+      border-right: 3px solid #f8881c;
+      border-left: 3px solid #66c3ec;
+      text-align:center;
+    }
+    /*覆盖bootstrap的样式*/
+    .nav-list,.nav-list li a{
+      padding: 0px;
+      margin: 0px;
+    }
+
+#menuContent.ztree {margin-top: 10px;border: 1px solid #617775;background: #f0f6e4;width:220px;height:360px;overflow-y:scroll;overflow-x:auto;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        

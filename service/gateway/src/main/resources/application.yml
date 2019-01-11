@@ -1,0 +1,25 @@
+zuul:
+  ribbon:
+    eager-load:
+      enabled: true
+  host:
+    maxTotalConnections: 200
+    maxPerRouteConnections: 20
+    connect-timeout-millis: 3000
+    socket-timeout-millis: 120000
+  routes:
+    rbacs:
+      path: /rbacs/**
+      serviceId: rbac-service
+
+ribbon:
+  ReadTimeout: 600000
+
+header-token: 
+  key: 27b93d8844c4ec57e3027b1de5455eb2
+  # 超时时间(毫秒); 0为不检查
+  timeout: 0
+
+permiturl:
+  permitAll:
+    - /rbacs/resources/auth
