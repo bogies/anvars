@@ -1,0 +1,14 @@
+#MacOS
+.DS_Store
+*/.DS_Store
+
+#flutter
+flutter/loanmarket/build/
+
+# eclipse ignore  
+.settings/  
+.project  
+.classpath
+
+#maven
+target/ 

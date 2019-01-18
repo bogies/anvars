@@ -1,0 +1,37 @@
+permiturl:
+  permitAll:
+    - /favicon.ico
+    - /web/**
+  devSwaggerUrl:
+    - /swagger-ui.html
+    - /swagger-resources/configuration/ui
+    - /webjars/springfox-swagger-ui/**
+    - /swagger-resources/configuration/security
+    - /swagger-resources
+    - /v2/api-docs
+    - /csrf
+swagger:
+  v2ApiDocs:
+    mapping: /v2/api-docs
+header-token: 
+  key: 27b93d8844c4ec57e3027b1de5455eb2
+  # 超时时间(毫秒); 0为不检查
+  timeout: 0
+  
+spring:
+  datasource:
+    hikari:
+      connection-test-query: SELECT 1
+      minimum-idle: 1
+      maximum-pool-size: 1
+      pool-name: dbcp1
+    driver-class-name: com.mysql.jdbc.Driver
+    jdbc-url: jdbc:mysql://141.3.119.54:9918/rbacs?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: Bmsoft2018
+    type: com.zaxxer.hikari.HikariDataSource
+
+
+ribbon:
+  ReadTimeout: 10000
+
