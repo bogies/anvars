@@ -19,11 +19,11 @@ public enum ErrorConstants {
 	SE_REQ_PARAMS(412, "请求的参数不完整"),
 	/** 412, "请求的参数不完整" */
 	SE_INTERNAL(500, "内部错误"),
-	/** 500, "内部错误" */
+	/** 10000, "内部错误" */
 	SE_AUTH_TOKEN(10000, "TOKEN错误"), 
-	/** 10000, "TOKEN错误" */
-	SE_TOKEN_TIMEOUT(10001, "TOKEN超时"), 
 	/** 10001, "TOKEN超时" */
+	SE_TOKEN_TIMEOUT(10001, "TOKEN超时"), 
+	/** 10002, "TOKEN错误" */
 	SE_TOKEN_SIGN(10002, "TOKEN签名错误"),
 	SE_LOGIN_ERROR(10003, "用户名或密码错误");
 

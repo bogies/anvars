@@ -8,8 +8,11 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.QueryParam;
 
 import org.ants.common.constants.ErrorConstants;
+import org.ants.common.entity.JWTPayloadEntity;
 import org.ants.common.entity.Result;
+import org.ants.common.utils.ServiceAuthToken;
 import org.ants.rbacs.model.RoleModel;
+import org.ants.rbacs.config.JWTConfig;
 import org.ants.rbacs.model.MembersModel;
 import org.ants.rbacs.service.MembersService;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +40,10 @@ import io.swagger.annotations.ApiOperation;
  */
 public class MembersController {
 	private Logger logger = LoggerFactory.getLogger(MembersController.class);
+	/// 其他服务端验证时间戳允许误差, 10秒 
+	private static final int TIMESTAMP_DEV = 10000;
+	@Autowired
+	private JWTConfig jwtConfig;
 	@Autowired
 	private MembersService userService;
 	
@@ -55,7 +62,37 @@ public class MembersController {
 		MembersModel user = userService.login(username, password);
 		Result rlt;
 		if (null != user) {
-			rlt = Result.success(user);
+			JWTPayloadEntity payload = new JWTPayloadEntity(user.getId(), user.getUsername());
+			rlt = Result.success(jwtConfig.generateToken(payload));
+		} else {
+			rlt = Result.fail(ErrorConstants.SE_LOGIN_ERROR);
+		}
+		
+		return rlt;
+	}
+	@ApiOperation(value="web服务端验证", notes="通过签名认证")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username", value = "用户名", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "timestamp", value = "时间戳", required = true, dataType = "long"),
+            @ApiImplicitParam(name = "sign", value = "签名", required = true, dataType = "String")
+    })
+	@ResponseBody
+	@RequestMapping(value = "/service/login", method = RequestMethod.POST)
+	public Result webServerLogin(HttpServletRequest request, String serviceName, 
+			long timestamp, String sign) {
+		long time = Math.abs(System.currentTimeMillis() - timestamp);
+		if (StringUtils.isBlank(serviceName)) {
+			return Result.fail(ErrorConstants.SE_REQ_PARAMS);
+		}
+		if (time > TIMESTAMP_DEV) {
+			return Result.fail(ErrorConstants.SE_TOKEN_TIMEOUT);
+		}
+		
+		String newSign = ServiceAuthToken.makeToken(serviceName, timestamp, jwtConfig.getSecret());
+		Result rlt;
+		if (newSign.equals(sign)) {
+			JWTPayloadEntity payload = new JWTPayloadEntity(serviceName, serviceName);
+			rlt = Result.success(jwtConfig.generateToken(payload));
 		} else {
 			rlt = Result.fail(ErrorConstants.SE_LOGIN_ERROR);
 		}

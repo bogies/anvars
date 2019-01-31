@@ -1,29 +1,35 @@
 package org.ants.common.constants;
 /**
  * @ClassName: SecurityConstants
- * @Description: TODO
+ * @Description: RESTful 请求header字段定义
  * @author: jerry
  * @date: 2018年12月12日 下午2:21:13
  */
 public class RequestHeaderConstants {
+	public static final String REQUEST_URI = "";
+	public static final String REQUEST_METHOD = "";
 	/**
-	 * 服务生成的签名
+	 * 认证token, jwt
 	 */
-    public static final String AUTH_TOKEN = "X-Auth-Token";
+    public static final String AUTH = "X-AUTH";
     /**
-     * 请求者的IP
+     * 用户ID
      */
-    public static final String CLIENT_IP = "X-Client-IP";
+    public static final String USER_ID = "X-UID";
     /**
-     * 请求序列号
+     * 用户名
      */
-    public static final String REQUEST_ID = "X-Req-ID";
+    public static final String USERNAME = "X-UNAME";
     /**
-     * view 请求服务的地址
+     * 用户IP
      */
-    public static final String REQUEST_URI = "V-Req-Uri";
+    public static final String USER_IP = "X-UIP";
     /**
-     * view 请求服务的方法
+     * 服务请求id
      */
-    public static final String REQUEST_METHOD = "V-Req-Method";
+    public static final String REQUEST_ID = "X-REQID";
+    /**
+     * 服务调用者
+     */
+    public static final String CALLER = "X-CALLER";
 }

@@ -12,3 +12,6 @@ flutter/loanmarket/build/
 
 #maven
 target/ 
+
+#other
+log/

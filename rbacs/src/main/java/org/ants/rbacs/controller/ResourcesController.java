@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.QueryParam;
-
 import org.ants.common.entity.Result;
 import org.ants.common.utils.HttpServiceUtil;
 import org.ants.rbacs.entity.ConsoulServices;
@@ -100,11 +99,11 @@ public class ResourcesController {
     })
 	@ResponseBody
 	@RequestMapping(value = "/auth" ,method = RequestMethod.GET)
-	public Result checkPermit(HttpServletRequest request, String userId,
-			@QueryParam("resId") String resId) {
+	public Result checkPermit(HttpServletRequest request, @QueryParam("resId") String resId) {
 		Result rlt = null;
 		
 		/*boolean isPermit;
+		String userId = request.getHeader(RequestHeaderConstants.USER_ID);
 		if (StringUtils.isEmpty(userId)) {
 			isPermit = resService.checkPermitByRoleId(RoleConstants.ROLE_ANONYMOUS.getRoleId(), resId);
 		} else {

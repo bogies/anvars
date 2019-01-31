@@ -13,10 +13,14 @@ permiturl:
 swagger:
   v2ApiDocs:
     mapping: /v2/api-docs
-header-token: 
-  key: 27b93d8844c4ec57e3027b1de5455eb2
-  # 超时时间(毫秒); 0为不检查
-  timeout: 0
+
+jwt: 
+  # header:凭证(校验的变量名)
+  header: X-AUTH
+  # 有效期(单位:s), 0为不检查
+  expire: 0
+  # 秘钥(普通字符串)
+  secret: cb1b43f7e6407abe23067411c1c9b7b3
   
 spring:
   datasource:
