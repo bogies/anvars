@@ -3,7 +3,7 @@ package org.ants.gateway.config;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import org.ants.common.constants.RequestHeaderConstants;
-import org.apache.commons.lang.StringUtils;
+import org.ants.common.utils.SystemUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,18 +34,26 @@ public class FeignClientConfig {
 			public void apply(RequestTemplate template) {
 				HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 				
-				template.header(RequestHeaderConstants.REQUEST_ID, UUID.randomUUID().toString());
 				String value = (String)request.getAttribute(RequestHeaderConstants.USER_ID);
-				if (StringUtils.isNotEmpty(value)) {
+				if (null != value) {
 					template.header(RequestHeaderConstants.USER_ID, value);
 				}
 				value = (String)request.getAttribute(RequestHeaderConstants.USERNAME);
-				if (StringUtils.isNotEmpty(value)) {
+				if (null != value) {
 					template.header(RequestHeaderConstants.USERNAME, value);
 				}
 				value = request.getHeader(RequestHeaderConstants.USER_IP);
-				if (StringUtils.isNotEmpty(value)) {
-					template.header(RequestHeaderConstants.USER_IP, value);
+				if (null == value) {
+					value = SystemUtils.getClientIp(request.getHeader("X-Real-IP"), 
+							request.getHeader("X-Forwarded-For"), 
+							request.getRemoteAddr());
+				}
+				template.header(RequestHeaderConstants.USER_IP, value);
+				value = request.getHeader(RequestHeaderConstants.REQUEST_ID);
+				if (null != value) {
+					template.header(RequestHeaderConstants.REQUEST_ID, value);
+				} else {
+					template.header(RequestHeaderConstants.REQUEST_ID, UUID.randomUUID().toString());
 				}
 			}
 		};

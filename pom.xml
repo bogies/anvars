@@ -22,7 +22,7 @@
 		<module>rbacs</module>
 		<module>gateway</module>
 		<module>common</module>
-		<module>RbacView</module>
+		<module>rbacview</module>
 	</modules>
 	
 	<build>

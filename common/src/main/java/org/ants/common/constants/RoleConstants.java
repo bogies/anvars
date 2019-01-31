@@ -1,4 +1,4 @@
-package org.ants.rbacs.constants;
+package org.ants.common.constants;
 
 public enum RoleConstants {
 	/** 匿名角色ID, 未登录用户都属于此角色 */

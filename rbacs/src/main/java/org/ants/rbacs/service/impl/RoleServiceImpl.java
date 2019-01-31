@@ -6,11 +6,10 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-import org.ants.rbacs.constants.RoleConstants;
+import org.ants.common.constants.RoleConstants;
 import org.ants.rbacs.dao.RoleDao;
 import org.ants.rbacs.model.ResourcesModel;
 import org.ants.rbacs.model.RoleModel;

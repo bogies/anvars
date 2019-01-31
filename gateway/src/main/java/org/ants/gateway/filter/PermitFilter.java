@@ -2,6 +2,7 @@ package org.ants.gateway.filter;
 
 import javax.servlet.http.HttpServletRequest;
 import org.ants.common.constants.ErrorConstants;
+import org.ants.common.constants.MemberConstants;
 import org.ants.common.constants.RequestHeaderConstants;
 import org.ants.common.entity.JWTPayloadEntity;
 import org.ants.common.entity.Result;
@@ -154,7 +155,10 @@ public class PermitFilter extends ZuulFilter {
     private boolean checkToken(HttpServletRequest request) {
     	String token = request.getHeader(jwtConfig.getHeader());
     	if (StringUtils.isBlank(token)) {
-    		return false;
+    		// 没有token视为匿名用户
+    		request.setAttribute(RequestHeaderConstants.USER_ID, MemberConstants.MEMBER_ANONYMOUS.getMemberId());
+            request.setAttribute(RequestHeaderConstants.USERNAME, MemberConstants.MEMBER_ANONYMOUS.getMemberName());
+    		return true;
     	}
     	
         // 获取签名信息

@@ -15,9 +15,9 @@ import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 
 import org.ants.common.constants.ErrorConstants;
+import org.ants.common.constants.RoleConstants;
 import org.ants.common.entity.Result;
 import org.ants.common.utils.EncryptUtil;
-import org.ants.rbacs.constants.RoleConstants;
 import org.ants.rbacs.dao.ResourcesDao;
 import org.ants.rbacs.entity.SwaggerApiDocs;
 import org.ants.rbacs.entity.SwaggerApiDocsPaths;

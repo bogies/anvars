@@ -30,9 +30,9 @@ spring:
       maximum-pool-size: 1
       pool-name: dbcp1
     driver-class-name: com.mysql.jdbc.Driver
-    jdbc-url: jdbc:mysql://141.3.119.54:9918/rbacs?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    jdbc-url: jdbc:mysql://code.ku8.info:8081/jrbac?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
     username: root
-    password: Bmsoft2018
+    password: mc59LsQ^b,VEWR7q
     type: com.zaxxer.hikari.HikariDataSource
 
 
