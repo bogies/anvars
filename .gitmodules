@@ -1,0 +1,3 @@
+[submodule "rbacview/src/main/webapp/webkits"]
+	path = rbacview/src/main/webapp/webkits
+	url = https://github.com/noaidk/webkits.git
