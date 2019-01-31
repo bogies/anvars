@@ -6,9 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.ants.common.constants.ErrorConstants;
 import org.ants.common.entity.CustomLogEntity;
+import org.ants.common.entity.MembersEntity;
 import org.ants.common.entity.Result;
 import org.ants.tommy.entity.LoginResult;
-import org.ants.tommy.entity.UserEntity;
 import org.ants.tommy.session.SessionParam;
 import org.ants.tommy.utils.RequestService;
 import org.ants.tommy.utils.ServiceResult;
@@ -36,15 +36,9 @@ public class ServicesController {
 		}
 		params.remove(NONE_PARAM);
 		
-		UserEntity user = (UserEntity)session.getAttribute(SessionParam.LOGIN_USER);
-		CustomLogEntity customLog = new CustomLogEntity();
-		if (null != user) {
-			customLog.setUserId(user.getId());
-			customLog.setUsername(user.getUsername());
-		}
-		
+		MembersEntity memberInfo = (MembersEntity)session.getAttribute(SessionParam.LOGIN_USER);
 		/// 要访问的服务
-		ServiceResult rlt = RequestService.requestService(request, customLog, params);
+		ServiceResult rlt = RequestService.requestService(request, memberInfo, params);
 		if (rlt.isReqSuccess()) {
 			return rlt.getResMsg();
 		} else {
@@ -59,7 +53,7 @@ public class ServicesController {
 			return gson.toJson(Result.success(ErrorConstants.SE_REQ_PARAMS));
 		}
 		
-		UserEntity user = (UserEntity)session.getAttribute(SessionParam.LOGIN_USER);
+		MembersEntity user = (MembersEntity)session.getAttribute(SessionParam.LOGIN_USER);
 		if (null != user) {
 			return gson.toJson(Result.success(user));
 		}
@@ -68,7 +62,7 @@ public class ServicesController {
 		customLog.setOperatorTypeLogin();
 		customLog.setUsername(params.get("username").toString());
 		
-		ServiceResult serviceRlt = RequestService.requestService(request, customLog, params);
+		ServiceResult serviceRlt = RequestService.requestService(request, user, params);
 		if (serviceRlt.isReqSuccess()) {
 			LoginResult rlt = gson.fromJson(serviceRlt.getResMsg(), LoginResult.class);
 			if (rlt.getCode() == 200) {

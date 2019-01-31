@@ -1,9 +1,11 @@
 package org.ants.tommy.entity;
 
+import org.ants.common.entity.MembersEntity;
+
 public class LoginResult {
 	private int code = 0;
 	private String message = "";
-	private UserEntity data = null;
+	private MembersEntity data = null;
 	public int getCode() {
 		return code;
 	}
@@ -16,10 +18,10 @@ public class LoginResult {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	public UserEntity getData() {
+	public MembersEntity getData() {
 		return data;
 	}
-	public void setData(UserEntity data) {
+	public void setData(MembersEntity data) {
 		this.data = data;
 	}
 }

@@ -126,8 +126,12 @@ public class OkHttpHelper {
 	public Response request(String url, Map<String, Object> params, String type) {
 		Request.Builder builder = new Request.Builder();
 		builder = builder.url(url);
+		String hv;
 		for (Map.Entry<String, String> row : headers.entrySet()) {
-			builder.addHeader(row.getKey(), row.getValue());
+			hv = row.getValue();
+			if (null != hv) {
+				builder.addHeader(row.getKey(), hv);
+			}
 		}
 		
 		if (StringUtils.isBlank(type)) {
@@ -193,8 +197,12 @@ public class OkHttpHelper {
 	public Response get(String url) {
 		Request.Builder builder = new Request.Builder();
 		builder = builder.url(url);
+		String hv;
 		for (Map.Entry<String, String> row : headers.entrySet()) {
-			builder.addHeader(row.getKey(), row.getValue());
+			hv = row.getValue();
+			if (null != hv) {
+				builder.addHeader(row.getKey(), hv);
+			}
 		}
 		
 		Request request = builder.build();
@@ -217,8 +225,12 @@ public class OkHttpHelper {
 	public Response post(String url, Map<String, Object> params) {
 		Request.Builder builder = new Request.Builder();
 		builder = builder.url(url);
+		String hv;
 		for (Map.Entry<String, String> row : headers.entrySet()) {
-			builder.addHeader(row.getKey(), row.getValue());
+			hv = row.getValue();
+			if (null != hv) {
+				builder.addHeader(row.getKey(), hv);
+			}
 		}
 		
 		RequestBody body = null;
@@ -246,8 +258,12 @@ public class OkHttpHelper {
 	public Response put(String url, Map<String, Object> params) {
 		Request.Builder builder = new Request.Builder();
 		builder = builder.url(url);
+		String hv;
 		for (Map.Entry<String, String> row : headers.entrySet()) {
-			builder.addHeader(row.getKey(), row.getValue());
+			hv = row.getValue();
+			if (null != hv) {
+				builder.addHeader(row.getKey(), hv);
+			}
 		}
 		
 		RequestBody body = null;
@@ -275,8 +291,12 @@ public class OkHttpHelper {
 	public Response delete(String url, Map<String, Object> params) {
 		Request.Builder builder = new Request.Builder();
 		builder = builder.url(url);
+		String hv;
 		for (Map.Entry<String, String> row : headers.entrySet()) {
-			builder.addHeader(row.getKey(), row.getValue());
+			hv = row.getValue();
+			if (null != hv) {
+				builder.addHeader(row.getKey(), hv);
+			}
 		}
 		
 		RequestBody body = null;

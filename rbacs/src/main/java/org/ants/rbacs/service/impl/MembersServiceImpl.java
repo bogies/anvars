@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.ants.rbacs.dao.MembersDao;
 import org.ants.rbacs.dao.RoleUsersDao;
 import org.ants.rbacs.model.RoleModel;
-import org.ants.rbacs.model.MembersModel;
 import org.ants.rbacs.service.MembersService;
 import org.ants.common.constants.ErrorConstants;
+import org.ants.common.entity.MembersEntity;
 import org.ants.common.entity.Result;
 import org.ants.common.utils.EncryptUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -33,8 +33,8 @@ public class MembersServiceImpl implements MembersService {
 	private RoleUsersDao roleDao;
 
 	@Override
-	public MembersModel login(String username, String password) {
-		MembersModel user = this.getByUsername(username);
+	public MembersEntity login(String username, String password) {
+		MembersEntity user = this.getByUsername(username);
 		String hashPwd = this.makePassword(username, password);
 		
 		if (hashPwd.equals(user.getPassword())) {
@@ -46,7 +46,7 @@ public class MembersServiceImpl implements MembersService {
 		return user;
 	}
 	@Override
-	public PageInfo<MembersModel> getUsers(MembersModel filter,int page, int pageSize) {
+	public PageInfo<MembersEntity> getUsers(MembersEntity filter,int page, int pageSize) {
 		
 		if (page < 1) {
 			page = 1;
@@ -55,20 +55,20 @@ public class MembersServiceImpl implements MembersService {
 			pageSize = 10;
 		}
 		PageHelper.startPage(page, pageSize);
-		PageInfo<MembersModel> pageInfo = null;
-		List<MembersModel> resourcesRecord = membersDao.getUsers(filter);
+		PageInfo<MembersEntity> pageInfo = null;
+		List<MembersEntity> resourcesRecord = membersDao.getUsers(filter);
 		if (null != resourcesRecord) {
-			pageInfo = new PageInfo<MembersModel>(resourcesRecord);
+			pageInfo = new PageInfo<MembersEntity>(resourcesRecord);
 		}
 		return pageInfo;
 	}
 	@Override
-	public Result insert(List<MembersModel> insertLi,String userId) {
+	public Result insert(List<MembersEntity> insertLi,String userId) {
 		
 		insertLi.forEach(args->{
 			args.setId(UUID.randomUUID().toString());
 		});
-		for (MembersModel rm : insertLi) {
+		for (MembersEntity rm : insertLi) {
 			if(rm.getPassword()!=null && !rm.getPassword().equals("")) {
 				String passwordMD5 = makePassword(rm.getUsername(), rm.getPassword());
 				rm.setPassword(passwordMD5);
@@ -98,7 +98,7 @@ public class MembersServiceImpl implements MembersService {
 		return rlt;
 	}
 	@Override
-	public Result update(MembersModel members, String userId) {
+	public Result update(MembersEntity members, String userId) {
 		
 		if(members.getPassword()!=null && !members.getPassword().equals("")) {
 			String passwordMD5 = makePassword(members.getUsername(), members.getPassword());
@@ -110,11 +110,11 @@ public class MembersServiceImpl implements MembersService {
 		return Result.success(membersDao.updateByUsername(members));
 	}
 	@Override
-	public MembersModel getById(String id) {
+	public MembersEntity getById(String id) {
 		return membersDao.getById(id);
 	}
 	@Override
-	public MembersModel getByUsername(String username) {
+	public MembersEntity getByUsername(String username) {
 		return membersDao.getByUsername(username);
 	}
 
@@ -129,7 +129,7 @@ public class MembersServiceImpl implements MembersService {
 	}
 
 	@Override
-	public int updateUserInfo(MembersModel user) {
+	public int updateUserInfo(MembersEntity user) {
 		return 0;
 	}
 

@@ -2,8 +2,8 @@ package org.ants.rbacs.dao;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.ants.common.entity.MembersEntity;
 import org.ants.rbacs.model.RoleModel;
-import org.ants.rbacs.model.MembersModel;
 
 /**
  * @Description: TODO
@@ -15,15 +15,15 @@ public interface MembersDao {
 	/**
 	 * 根据查找条件获取用户信息
 	 * @param filter
-	 * @return：List<MembersModel>
+	 * @return：List<MembersEntity>
 	 */
-	public List<MembersModel> getUsers(@Param("filter") MembersModel filter);
+	public List<MembersEntity> getUsers(@Param("filter") MembersEntity filter);
 	/**
 	 * 添加用户
 	 * @param loginUser
 	 * @return：int
 	 */
-	public int insert(List<MembersModel> members);
+	public int insert(List<MembersEntity> members);
 	/**
 	 * 删除用户
 	 * @param id
@@ -46,13 +46,13 @@ public interface MembersDao {
 	 * @param id
 	 * @return：UserModel
 	 */
-	public MembersModel getById(@Param("id") String id);
+	public MembersEntity getById(@Param("id") String id);
 	/**
 	 * TODO
 	 * @param username
 	 * @return：UserModel
 	 */
-	public MembersModel getByUsername(@Param("username") String username);
+	public MembersEntity getByUsername(@Param("username") String username);
 	/**
 	 * 根据用户名统计用户数量
 	 * @param username
@@ -64,13 +64,13 @@ public interface MembersDao {
 	 * @param user
 	 * @return：List<RoleModel>
 	 */
-	public List<RoleModel> findRoles(@Param("user") MembersModel user);
+	public List<RoleModel> findRoles(@Param("user") MembersEntity user);
 	/**
 	 * 修改用户基本信息
 	 * @param loginUser
 	 * @return：int
 	 */
-	public int updateByUsername(@Param("members") MembersModel members);
+	public int updateByUsername(@Param("members") MembersEntity members);
 	/**
 	 * 删除用户所有的角色
 	 * @param userId

@@ -3,10 +3,8 @@ package org.ants.tommy.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.ants.common.entity.CustomLogEntity;
+import org.ants.common.entity.MembersEntity;
 import org.ants.tommy.AppConfig;
-import org.ants.tommy.entity.UserEntity;
 import org.ants.tommy.session.SessionParam;
 import org.ants.tommy.utils.RequestService;
 import org.ants.tommy.utils.ServiceResult;
@@ -33,19 +31,10 @@ public class ViewController {
 			return HOME_URI;
 		}
 		
-		CustomLogEntity customLog = new CustomLogEntity();
-		UserEntity userInfo = (UserEntity)request.getSession().getAttribute(SessionParam.LOGIN_USER);
+		MembersEntity userInfo = (MembersEntity)request.getSession().getAttribute(SessionParam.LOGIN_USER);
 		if (!AppConfig.instance().getConfig().isPermitAllUrl(page)) {
-			String userId ;
-			if (null != userInfo) {
-				userId = userInfo.getId();
-				customLog.setUserId(userId);
-				customLog.setUsername(userInfo.getUsername());
-			} else {
-				userId = "";
-			}
 			/// 检查权限
-			ServiceResult rlt = RequestService.checkAuth(request, customLog, page);
+			ServiceResult rlt = RequestService.checkAuth(request, userInfo, page);
 			if (!rlt.isReqSuccess()) {
 				return NOT_FOUND;
 			}
@@ -77,7 +66,7 @@ public class ViewController {
 			/// 这里应该返回404错误页面
 			return NOT_FOUND;
 		}
-		UserEntity userInfo = (UserEntity)request.getSession().getAttribute(SessionParam.LOGIN_USER);
+		MembersEntity userInfo = (MembersEntity)request.getSession().getAttribute(SessionParam.LOGIN_USER);
 		
 		m.addAttribute("webConfig", AppConfig.instance().getWebConfig());
 		m.addAttribute("userInfo", userInfo);
@@ -87,7 +76,7 @@ public class ViewController {
 	@RequestMapping(value = "/login.html", method = RequestMethod.GET)
 	public String login(Model m, HttpServletRequest request, HttpSession session, 
 			HttpServletResponse response, String returnUrl) {
-		UserEntity user = (UserEntity)session.getAttribute(SessionParam.LOGIN_USER);
+		MembersEntity user = (MembersEntity)session.getAttribute(SessionParam.LOGIN_USER);
 		m.addAttribute("webConfig", AppConfig.instance().getWebConfig());
 		m.addAttribute("returnUrl", returnUrl);
 		

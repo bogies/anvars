@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.ants.rbacs.dao.MembersDao">
-	<resultMap type="org.ants.rbacs.model.MembersModel" id="memberInfo">
+	<resultMap type="org.ants.common.entity.MembersEntity" id="memberInfo">
 		<id property="id" column="id"/>
 		<result property="username" column="username"/>
 		<result property="password" column="password"/>
@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="admin" column="is_admin"/>
 		<result property="status" column="status"/>
 	</resultMap>
-	<resultMap type="org.ants.rbacs.model.MembersModel" id="memberBaseInfo">
+	<resultMap type="org.ants.common.entity.MembersEntity" id="memberBaseInfo">
 		<id property="id" column="id"/>
 		<result property="username" column="username"/>
 		<result property="nickname" column="nickname"/>

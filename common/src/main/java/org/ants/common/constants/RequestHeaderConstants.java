@@ -6,8 +6,8 @@ package org.ants.common.constants;
  * @date: 2018年12月12日 下午2:21:13
  */
 public class RequestHeaderConstants {
-	public static final String REQUEST_URI = "";
-	public static final String REQUEST_METHOD = "";
+	public static final String REQUEST_URI = "XV-URI";
+	public static final String REQUEST_METHOD = "XV-METHOD";
 	/**
 	 * 认证token, jwt
 	 */

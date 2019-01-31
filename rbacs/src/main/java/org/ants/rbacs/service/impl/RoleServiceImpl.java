@@ -10,10 +10,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 import org.ants.common.constants.RoleConstants;
+import org.ants.common.entity.MembersEntity;
 import org.ants.rbacs.dao.RoleDao;
 import org.ants.rbacs.model.ResourcesModel;
 import org.ants.rbacs.model.RoleModel;
-import org.ants.rbacs.model.MembersModel;
 import org.ants.rbacs.service.RoleService;
 
 @Service
@@ -95,7 +95,7 @@ public class RoleServiceImpl implements RoleService {
 		return roleDao.delete(id);
 	}
 	@Override
-	public PageInfo<MembersModel> getMembers(String roleId, int page, int pageSize) {
+	public PageInfo<MembersEntity> getMembers(String roleId, int page, int pageSize) {
 		if (page < 1) {
 			page = 1;
 		}
@@ -103,10 +103,10 @@ public class RoleServiceImpl implements RoleService {
 			pageSize = 10;
 		}
 		PageHelper.startPage(page, pageSize);
-		PageInfo<MembersModel> userListPage = null;
-		List<MembersModel> userList = roleDao.getMembers(roleId);
+		PageInfo<MembersEntity> userListPage = null;
+		List<MembersEntity> userList = roleDao.getMembers(roleId);
 		if (null != userList) {
-			userListPage = new PageInfo<MembersModel>(userList);
+			userListPage = new PageInfo<MembersEntity>(userList);
 		}
 		
 		return userListPage;
@@ -120,11 +120,11 @@ public class RoleServiceImpl implements RoleService {
 			pageSize = 10;
 		}
 		PageHelper.startPage(page, pageSize);
-		PageInfo<MembersModel> userListPage = null;
-		List<MembersModel> userList = roleDao.getUnauthMembers(roleId);
+		PageInfo<MembersEntity> userListPage = null;
+		List<MembersEntity> userList = roleDao.getUnauthMembers(roleId);
 
 		if (null != userList) {
-			userListPage = new PageInfo<MembersModel>(userList);
+			userListPage = new PageInfo<MembersEntity>(userList);
 		}
 		
 		return userListPage;

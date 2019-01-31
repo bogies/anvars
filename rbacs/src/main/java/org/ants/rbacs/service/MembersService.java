@@ -3,12 +3,10 @@ package org.ants.rbacs.service;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-
 import com.github.pagehelper.PageInfo;
-
 import org.ants.rbacs.model.RoleModel;
+import org.ants.common.entity.MembersEntity;
 import org.ants.common.entity.Result;
-import org.ants.rbacs.model.MembersModel;
 
 /**
  * @Description: TODO
@@ -22,25 +20,25 @@ public interface MembersService {
 	 * @param password
 	 * @return
 	 */
-	public MembersModel login(String username, String password);
+	public MembersEntity login(String username, String password);
 	/**
 	 * 根据条件查找用户
 	 * @param filter 查找过滤条件
 	 * @return 用户信息列表
 	 */
-	public PageInfo<MembersModel> getUsers(MembersModel filter, int page, int pageSize);
+	public PageInfo<MembersEntity> getUsers(MembersEntity filter, int page, int pageSize);
 	/**
 	 * TODO 根据id查询一个登录用户
 	 * @param id
 	 * @return：UserModel
 	 */
-	public MembersModel getById(String id);
+	public MembersEntity getById(String id);
 	/**
 	 * TODO 根据用户名获取用户信息
 	 * @param username
 	 * @return：UserModel
 	 */
-	public MembersModel getByUsername(String username);
+	public MembersEntity getByUsername(String username);
 	
 	/**TODO 
 	 * @param username
@@ -60,7 +58,7 @@ public interface MembersService {
 	 * @param user
 	 * @return：int
 	 */
-	public int updateUserInfo(MembersModel user);
+	public int updateUserInfo(MembersEntity user);
 	/**
 	 * TODO 根据用户id返回他所有的角色
 	 * @param userId
@@ -73,7 +71,7 @@ public interface MembersService {
 	 * @param userId 
 	 * @return：int
 	 */
-	public Result insert(List<MembersModel> insertLi, String userId);
+	public Result insert(List<MembersEntity> insertLi, String userId);
 	/**
 	 * TODO 根据id用户
 	 * @param 用户id
@@ -86,7 +84,7 @@ public interface MembersService {
 	 * @param userId 
 	 * @return：int
 	 */
-	public Result update(MembersModel loginUser, String userId);
+	public Result update(MembersEntity loginUser, String userId);
 	/**
 	 * TODO 添加用户所属角色
 	 * @param userId

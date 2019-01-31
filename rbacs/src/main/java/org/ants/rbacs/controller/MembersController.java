@@ -2,18 +2,16 @@ package org.ants.rbacs.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.QueryParam;
-
 import org.ants.common.constants.ErrorConstants;
 import org.ants.common.entity.JWTPayloadEntity;
 import org.ants.common.entity.Result;
 import org.ants.common.utils.ServiceAuthToken;
 import org.ants.rbacs.model.RoleModel;
 import org.ants.rbacs.config.JWTConfig;
-import org.ants.rbacs.model.MembersModel;
+import org.ants.common.entity.MembersEntity;
 import org.ants.rbacs.service.MembersService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -59,11 +57,12 @@ public class MembersController {
 			return Result.fail(ErrorConstants.SE_REQ_PARAMS);
 		}
 		
-		MembersModel user = userService.login(username, password);
+		MembersEntity user = userService.login(username, password);
 		Result rlt;
 		if (null != user) {
 			JWTPayloadEntity payload = new JWTPayloadEntity(user.getId(), user.getUsername());
-			rlt = Result.success(jwtConfig.generateToken(payload));
+			user.setToken(jwtConfig.generateToken(payload));
+			rlt = Result.success(user);
 		} else {
 			rlt = Result.fail(ErrorConstants.SE_LOGIN_ERROR);
 		}
@@ -103,13 +102,13 @@ public class MembersController {
     @ApiImplicitParams({
 	    	@ApiImplicitParam(name = "page", value = "请求的页码", required = true, dataType = "int"),
 	        @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "filter", value = "members 实体类", required = false, dataType = "MembersModel")
+            @ApiImplicitParam(name = "filter", value = "members 实体类", required = false, dataType = "MembersEntity")
     })
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public Result getUsers(MembersModel filter,@QueryParam("page") int page, @QueryParam("pageSize") int pageSize) {
+	public Result getUsers(MembersEntity filter,@QueryParam("page") int page, @QueryParam("pageSize") int pageSize) {
 		
-		PageInfo<MembersModel> userList = userService.getUsers(filter,page,pageSize);
+		PageInfo<MembersEntity> userList = userService.getUsers(filter,page,pageSize);
 		Result res = Result.success(userList);
 		return res;
 	}
@@ -120,9 +119,9 @@ public class MembersController {
     })
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Result insertUsers(MembersModel mm,String userId) {
+	public Result insertUsers(MembersEntity mm,String userId) {
 		
-		List<MembersModel> insertLi = new ArrayList<>();
+		List<MembersEntity> insertLi = new ArrayList<>();
 		insertLi.add(mm);
 		
 		Result res = userService.insert(insertLi,userId);
@@ -136,11 +135,11 @@ public class MembersController {
 	}
 	@ApiOperation(value="修改 members Table 用户信息", notes="")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "filter", value = "members 实体类", required = false, dataType = "MembersModel")
+            @ApiImplicitParam(name = "filter", value = "members 实体类", required = false, dataType = "MembersEntity")
     })
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result updateRes(MembersModel members,String userId) {
+	public Result updateRes(MembersEntity members,String userId) {
 		
 		return userService.update(members,userId);
 	}

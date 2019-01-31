@@ -1,4 +1,4 @@
-package org.ants.rbacs.model;
+package org.ants.common.entity;
 
 
 /**
@@ -6,7 +6,7 @@ package org.ants.rbacs.model;
  * @author: renkun
  * @date: 2018年12月13日上午9:23:58
  */
-public class MembersModel {
+public class MembersEntity {
 	private String id;
 	private String username;
 	private String password;
@@ -20,6 +20,7 @@ public class MembersModel {
 	private int pwdError;
 	private int orderBy;
 	private int admin;
+	private String token;
 
 	public String getId() {
 		return id;
@@ -115,5 +116,13 @@ public class MembersModel {
 
 	public void setConfirmPwd(String confirmPwd) {
 		this.confirmPwd = confirmPwd;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

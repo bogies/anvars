@@ -8,8 +8,8 @@ rbacViewApp.controller('loginCtrl', function ($scope, $compile) {
             data: {username: $scope.loginParam.username, password: $scope.loginParam.password},
             dataType: 'JSON',
             beforeSend:function(req) {
-                req.setRequestHeader('V-Req-Method', 'post');
-                req.setRequestHeader('V-Req-Uri', '/rbacs/members/login');
+                req.setRequestHeader(HeaderConstants.METHOD, 'post');
+                req.setRequestHeader(HeaderConstants.URI, '/rbacs/members/login');
             },
             success: function(result) {
                 console.log(result);

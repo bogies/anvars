@@ -2,9 +2,9 @@ package org.ants.rbacs.dao;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.ants.common.entity.MembersEntity;
 import org.ants.rbacs.model.ResourcesModel;
 import org.ants.rbacs.model.RoleModel;
-import org.ants.rbacs.model.MembersModel;
 
 /**
  * @Description: 角色管理
@@ -63,8 +63,8 @@ public interface RoleDao {
 	 * @param roleId
 	 * @return：List<UserModel>
 	 */
-	public List<MembersModel> getMembers(@Param("roleId") String roleId);
-	public List<MembersModel> getUnauthMembers(@Param("roleId") String roleId);
+	public List<MembersEntity> getMembers(@Param("roleId") String roleId);
+	public List<MembersEntity> getUnauthMembers(@Param("roleId") String roleId);
 	public List<ResourcesModel> getRes(@Param("roleId") String roleId);
 	public List<ResourcesModel> getUnauthRes(@Param("roleId") String roleId);
 }
