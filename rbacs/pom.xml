@@ -253,7 +253,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 			<!--拷贝资源文件 copy-resources -->
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -275,7 +274,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 			<!--spring boot repackage，依赖 maven-jar-plugin 打包的jar包 重新打包成 spring boot 
 				的jar包 -->
 			<plugin>
