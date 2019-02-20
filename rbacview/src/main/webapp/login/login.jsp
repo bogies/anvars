@@ -80,7 +80,8 @@
       <button type="button" ng-click="reqLogin();" class="btn btn-default">登录</button>
     </div>
   </div> -->
-  <script src="${pageContext.request.contextPath}/login/login.js?v=3"></script>
+  <script> window.returnUrl = "${returnUrl}";</script>
+  <script src="${pageContext.request.contextPath}/login/login.js?v=4"></script>
 </body>
 
 </html>

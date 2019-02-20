@@ -12,6 +12,8 @@ import org.ants.tommy.entity.LoginResult;
 import org.ants.tommy.session.SessionParam;
 import org.ants.tommy.utils.RequestService;
 import org.ants.tommy.utils.ServiceResult;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +28,24 @@ public class ServicesController {
 	private final String NONE_PARAM = "none";
 	
 	private static final Gson gson = new Gson();
+
+	/**
+	 * nginx auth_request模块登录验证
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/auth.jsd", produces = "text/plain;charset=UTF-8")
+	public ResponseEntity<HttpStatus> auth(HttpServletRequest request, HttpSession session) {
+		MembersEntity memberInfo = (MembersEntity)session.getAttribute(SessionParam.LOGIN_USER);
+		ResponseEntity<HttpStatus> res;
+		if (null != memberInfo) {
+			res = new ResponseEntity<HttpStatus>(HttpStatus.OK);
+		} else {
+			res = new ResponseEntity<HttpStatus>(HttpStatus.UNAUTHORIZED);
+		}
+		return res;
+	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/do.jsd", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")

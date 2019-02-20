@@ -78,7 +78,17 @@ public class ViewController {
 			HttpServletResponse response, String returnUrl) {
 		MembersEntity user = (MembersEntity)session.getAttribute(SessionParam.LOGIN_USER);
 		m.addAttribute("webConfig", AppConfig.instance().getWebConfig());
-		m.addAttribute("returnUrl", returnUrl);
+		if (StringUtils.isEmpty(returnUrl)) {
+			returnUrl = request.getHeader("cookie");
+			if (null!=returnUrl && returnUrl.startsWith("http")) {
+				m.addAttribute("returnUrl", returnUrl);
+			} else {
+				m.addAttribute("returnUrl", "");
+			}
+		} else {
+			m.addAttribute("returnUrl", returnUrl);
+		}
+		
 		
 		String viewUri = returnUrl;
 		if (null == user) {

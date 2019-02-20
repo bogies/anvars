@@ -14,7 +14,11 @@ rbacViewApp.controller('loginCtrl', function ($scope, $compile) {
             success: function(result) {
                 console.log(result);
                 if (200 == result.code) {
-                    window.location.href = URI_DOMAIN+'/v/index.html';
+                    if (StringUtils.isEmpty(returnUrl)) {
+                        window.location.href = URI_DOMAIN+'/v/index.html';
+                    } else {
+                        window.location.href = returnUrl;
+                    }
                 }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {

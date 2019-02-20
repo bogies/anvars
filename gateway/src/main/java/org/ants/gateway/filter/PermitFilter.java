@@ -120,9 +120,8 @@ public class PermitFilter extends ZuulFilter {
         	responseError(ctx, Result.fail(ErrorConstants.SE_TOKEN_SIGN));
         	return null;
         }
-        
+
         Route route = route(request);
-        
         StringBuilder resSrc = new StringBuilder();
         resSrc.append(route.getPath().toLowerCase());
         resSrc.append(request.getMethod().toLowerCase());

@@ -24,7 +24,9 @@ jwt:
   secret: cb1b43f7e6407abe23067411c1c9b7b3
 
 permiturl:
+  # 不检查权限的列表, 设置为 /** 时表示全部不检查, 一般测试时使用
   permitAll:
     - /rbacs/resources/auth
     - /rbacs/members/service/login
     - /rbacs/members/login
+    - /**
