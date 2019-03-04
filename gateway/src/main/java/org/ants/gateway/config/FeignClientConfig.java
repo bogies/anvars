@@ -49,6 +49,7 @@ public class FeignClientConfig {
 							request.getRemoteAddr());
 				}
 				template.header(RequestHeaderConstants.USER_IP, value);
+				
 				value = request.getHeader(RequestHeaderConstants.REQUEST_ID);
 				if (null != value) {
 					template.header(RequestHeaderConstants.REQUEST_ID, value);

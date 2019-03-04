@@ -1,5 +1,6 @@
 package org.ants.tommy;
 
+import org.ants.common.entity.CustomRequestEntity;
 import org.ants.common.entity.Result;
 import org.ants.tommy.utils.RequestService;
 import org.slf4j.Logger;
@@ -8,6 +9,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * @ClassName: StartupListener
@@ -31,12 +34,16 @@ public class StartupListener implements ApplicationListener<ContextRefreshedEven
 		}
 		
 		if (!loaded && parent.getDisplayName().equals("Root WebApplicationContext")) {
-			Result rlt = RequestService.getServiceToken();
+			CustomRequestEntity customReq = new CustomRequestEntity();
+			customReq.setRequestId();
+			long startTime = System.currentTimeMillis();
+			Result rlt = RequestService.getServiceToken(customReq);
 			if (rlt.isSuccess()) {
 				AppConfig.instance().setToken((String)rlt.getData());
-			} else {
-				LOGGER.error("获取服务Token失败{}", rlt.getMessage());
 			}
+			customReq.setUptime(System.currentTimeMillis()-startTime);
+			LOGGER.info(JSON.toJSONString(customReq));
+			
 			loaded = true;
 		}
 	}

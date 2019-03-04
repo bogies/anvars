@@ -123,7 +123,7 @@ public class OkHttpHelper {
 	 * @param type 请求的方法 GET, POST PUT, DELETE
 	 * @return 请求结果
 	 */
-	public Response request(String url, Map<String, Object> params, String type) {
+	public Response request(String url, Map<String, Object> params, String type) throws Exception {
 		Request.Builder builder = new Request.Builder();
 		builder = builder.url(url);
 		String hv;
@@ -139,38 +139,27 @@ public class OkHttpHelper {
 		} else {
 			type = type.toUpperCase();
 		}
-		
+		long length = 0;
 		RequestBody body = null;
 		switch (type) {
 		case "POST":
 			body = buildRequestBody(params);
 			builder.post(body);
-			try {
-				long length = body.contentLength();
-				builder.addHeader("Content-Length", length + "");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			length = body.contentLength();
+			builder.addHeader("Content-Length", length + "");
+	
 			break;
 		case "PUT":
 			body = buildRequestBody(params);
 			builder.put(body);
-			try {
-				long length = body.contentLength();
-				builder.addHeader("Content-Length", length + "");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			length = body.contentLength();
+			builder.addHeader("Content-Length", length + "");
 			break;
 		case "DELETE":
 			body = buildRequestBody(params);
 			builder.delete(body);
-			try {
-				long length = body.contentLength();
-				builder.addHeader("Content-Length", length + "");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			length = body.contentLength();
+			builder.addHeader("Content-Length", length + "");
 			break;
 		case "GET":
 		default:
@@ -179,15 +168,7 @@ public class OkHttpHelper {
 		}
 		
 		Request request = builder.build();
-		Response response = null;
-		try {
-			response = httpClient.newCall(request).execute();
-		} catch (Exception e) {
-			e.printStackTrace();
-			response = null;
-		}
-		
-		return response;
+		return httpClient.newCall(request).execute();
 	}
 	/**
 	 * get 请求

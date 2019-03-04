@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration status="WARN" monitorInterval="30">
 	<Properties>
-		<Property name="logPath">./log</Property>
+		<Property name="logPath">./logs</Property>
 	</Properties>
     <appenders>
         <!--  输出控制台的配置 -->

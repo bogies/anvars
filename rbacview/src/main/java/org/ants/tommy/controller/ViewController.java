@@ -3,7 +3,10 @@ package org.ants.tommy.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.ants.common.entity.CustomRequestEntity;
 import org.ants.common.entity.MembersEntity;
+import org.ants.common.utils.SystemUtils;
 import org.ants.tommy.AppConfig;
 import org.ants.tommy.session.SessionParam;
 import org.ants.tommy.utils.RequestService;
@@ -33,8 +36,20 @@ public class ViewController {
 		
 		MembersEntity userInfo = (MembersEntity)request.getSession().getAttribute(SessionParam.LOGIN_USER);
 		if (!AppConfig.instance().getConfig().isPermitAllUrl(page)) {
+			String clientIp = SystemUtils.getClientIp(request.getHeader("X-Real-IP"), 
+					request.getHeader("X-Forwarded-For"), 
+					request.getRemoteAddr());
+			
 			/// 检查权限
-			ServiceResult rlt = RequestService.checkAuth(request, userInfo, page);
+			CustomRequestEntity customReq = new CustomRequestEntity();
+			customReq.setOperatorTypeLogin();
+			customReq.setRequestId();
+			customReq.setClientIP(clientIp);
+			if (null != userInfo) {
+				customReq.setUserId(userInfo.getId());
+				customReq.setUsername(userInfo.getUsername());
+			}
+			ServiceResult rlt = RequestService.checkAuth(customReq, page);
 			if (!rlt.isReqSuccess()) {
 				return NOT_FOUND;
 			}

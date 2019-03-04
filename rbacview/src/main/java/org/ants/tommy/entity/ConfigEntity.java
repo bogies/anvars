@@ -16,8 +16,8 @@ public class ConfigEntity {
 	private String signKey;
 	@Value("${gateway}")
 	private String gateway;
-	@Value("${authUrl}")
-	private String authUrl;
+	@Value("${loginUrl}")
+	private String loginUrl;
 	@Value("${serviceAuthUrl}")
 	private String serviceAuthUrl;
 	@Value("${permitAll}")
@@ -65,11 +65,11 @@ public class ConfigEntity {
 	public void setSignKey(String signKey) {
 		this.signKey = signKey;
 	}
-	public String getAuthUrl() {
-		return authUrl;
+	public String getLoginUrl() {
+		return loginUrl;
 	}
-	public void setAuthUrl(String authUrl) {
-		this.authUrl = authUrl;
+	public void setLoginUrl(String loginUrl) {
+		this.loginUrl = loginUrl;
 	}
 	public String getGateway() {
 		return gateway;

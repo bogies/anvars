@@ -1,8 +1,9 @@
 package org.ants.common.entity;
 
+import java.util.Map;
 import java.util.UUID;
 
-public class CustomLogEntity {
+public class CustomRequestEntity {
 	private static final String DATA_INVALID = "0";
 	private static final String OPEARTOR_TYPE_LOGIN = "登录";
 	private static final String OPEARTOR_TYPE_ADD = "增加";
@@ -11,6 +12,8 @@ public class CustomLogEntity {
 	private static final String OPEARTOR_TYPE_GET = "查看";
 	
 	private String requestId;
+	private String requestUri;
+	private String requestMethod;
 	private String clientIP;
 	private String serviceName;
 	private String userId = DATA_INVALID;
@@ -18,40 +21,12 @@ public class CustomLogEntity {
 	private String operatorType;
 	// 操作内容
 	private String operatorDesc = DATA_INVALID;
-	private String requestParams = DATA_INVALID;
+	private Map<String, Object> requestParams;
 	// 结果
 	private boolean success;
 	private String resultMsg = DATA_INVALID;
 	// 耗时
 	private long uptime = -1;
-	
-	@Override
-	public String toString() {
-		StringBuilder log = new StringBuilder(1024);
-		log.append(requestId);
-		log.append("$#");
-		log.append(serviceName);
-		log.append("$#");
-		log.append(clientIP);
-		log.append("$#");
-		log.append(userId);
-		log.append("$#");
-		log.append(username);
-		log.append("$#");
-		log.append(operatorType);
-		log.append("$#");
-		log.append(operatorDesc);
-		log.append("$#");
-		log.append(requestParams);
-		log.append("$#");
-		log.append(success);
-		log.append("$#");
-		log.append(resultMsg);
-		log.append("$#");
-		log.append(uptime);
-		
-		return log.toString();
-	}
 	
 	public String getRequestId() {
 		return requestId;
@@ -104,10 +79,10 @@ public class CustomLogEntity {
 	public void setOperatorDesc(String operatorDesc) {
 		this.operatorDesc = operatorDesc;
 	}
-	public String getRequestParams() {
+	public Map<String, Object> getRequestParams() {
 		return requestParams;
 	}
-	public void setRequestParams(String requestParams) {
+	public void setRequestParams(Map<String, Object> requestParams) {
 		this.requestParams = requestParams;
 	}
 	public String getUserId() {
@@ -145,5 +120,17 @@ public class CustomLogEntity {
 
 	public void setUptime(long uptime) {
 		this.uptime = uptime;
+	}
+	public String getRequestUri() {
+		return requestUri;
+	}
+	public void setRequestUri(String requestUri) {
+		this.requestUri = requestUri;
+	}
+	public String getRequestMethod() {
+		return requestMethod;
+	}
+	public void setRequestMethod(String requestMethod) {
+		this.requestMethod = requestMethod;
 	}
 }
