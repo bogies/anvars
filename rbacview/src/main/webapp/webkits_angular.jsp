@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<!-- Angularjs ui-route 兼容ie8,9 -->
 <!--[if lt IE 10]>
 <script src="${pageContext.request.contextPath}/webkits/ielt10/json2.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/ielt10/html5.js"></script>
@@ -18,11 +18,9 @@
 <script src="${pageContext.request.contextPath}/webkits/layui/layui.all.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/jquery/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/jquery/jquery.form.min.js"></script>
-<script src="${pageContext.request.contextPath}/webkits/vue/vue.min.js"></script>
-
-<script src="${pageContext.request.contextPath}/webkits/vue/vue-router.min.js"></script>
-
-<script src="${pageContext.request.contextPath}/webkits/vue/ants-component.js"></script>
+<script src="${pageContext.request.contextPath}/webkits/angular/angular.min.js?v=1"></script>
+<script src="${pageContext.request.contextPath}/webkits/angular/angular-ui-router.min.js"></script>
+<script src="${pageContext.request.contextPath}/webkits/angular/ants_directives.min.js?v=5"></script>
 <script src="${pageContext.request.contextPath}/webkits/promise-6.1.0.min.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/bluebird.core.min.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/base64.min.js"></script>
@@ -30,7 +28,5 @@
 <script src="${pageContext.request.contextPath}/webkits/string_utils.min.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/list_utils.min.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/tmsp.js?v=8"></script>
-<script src="${pageContext.request.contextPath}/webkits/loading/jquery.loading.min.js"></script>
-
 <link href="${pageContext.request.contextPath}/webkits/loading/jquery.loading.min.css?v=2" rel="stylesheet">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/webkits/layui/css/layui.css">
+<script src="${pageContext.request.contextPath}/webkits/loading/jquery.loading.min.js"></script>

@@ -1,4 +1,76 @@
-rbacViewApp.controller('resourcesCtrl', function ($scope, $compile) {
+
+var resourcesTpl = {
+  template: '#resources-template',
+  data: function() {
+    return {
+      searchParam: { path: '', reqMethod:'', summary: '', servicesName: '' }, 
+      resourcesList: { total: 0, list:[] }, 
+      addX: { type: '', path: '', reqMethod:'', summary: '', servicesName: '', description: '' }, 
+      editX: { type: '', path: '', reqMethod:'', description: '', summary: '', servicesName: '' }
+    };
+  }, 
+  methods: {
+    refreshPage: function(page) {
+      var self = this;
+      Tmsp('/rbacs/resources?page='+page+'&pageSize=10&path='+self.searchParam.path+
+                            "&reqMethod="+self.searchParam.reqMethod+"&summary="+self.searchParam.summary+
+                            "&servicesName="+self.searchParam.servicesName, 'get').then(function(result){
+    
+        console.log(result);
+        self.resourcesList = result.data;
+        }, function(error) {
+          console.log(error);
+        });
+    }, 
+    openEditDlg: function(isAdd) {
+      var dlgTitle  = isAdd ? "添加" : '编辑';
+      var self = this;
+      var dlgIndex = layer.open({
+        type: 1,
+        scrollbar: false,
+        skin: "layer-ext-moon",
+        area: ["500px", "450px"],
+        title: dlgTitle,
+        shadeClose: false,
+        btn: ["确认", "取消"],
+        content: layui.jquery("#editResources"),
+        yes: function() {
+          Tmsp('/rbacs/resources', 'post',addX).then(function(result){
+            if (result.code==200) {
+              self.refreshPage(resourcesList.pageNum);
+              layer.close(dlgIndex);
+            } else {
+              layer.msg(result.message, {
+                icon: 2,
+                time: 1000
+              });
+            }
+    
+          }, function(reason) {
+              layer.msg(reason.message, {
+                icon: 2,
+                time: 5000
+              });
+          });
+    
+        }
+      });
+    }, 
+    clearSearch: function() {
+      this.searchParam.type='';
+      this.searchParam.path='';
+      this.searchParam.reqMethod='';
+      this.searchParam.summary='';
+      this.searchParam.servicesName='';
+      this.searchParam.description='';
+    }
+  }, 
+  mounted: function (){
+    this.refreshPage(1)
+  }
+};
+
+/*rbacViewApp.controller('resourcesCtrl', function ($scope, $compile) {
 
 // 新增接口信息
 $scope.openAdd = function() {
@@ -128,3 +200,4 @@ $scope.refreshPage = function(page) {
 $scope.clearSearch();
 $scope.refreshPage(1);
 });
+*/
