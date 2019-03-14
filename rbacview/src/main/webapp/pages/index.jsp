@@ -22,13 +22,13 @@
                         <a href="javascript:;">管理信息</a>
                         <dl class="layui-nav-child">
                             <li>
-                                <router-link :to="{name:'resources'}">资源管理</router-link>
+                                <router-link to="/resources">资源管理</router-link>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" ui-sref="role">角色管理</a>
+                                <router-link to="/role">角色管理</router-link>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" ui-sref="user">用户管理</a>
+                                <router-link to="/member">用户管理</router-link>
                             </li>
                         </dl>
                     </li>
@@ -39,7 +39,10 @@
     
         <%@ include file="../pagebar/simple.html" %>
         <%@ include file="./index/resources.html" %>
+        
         <script src="${pageContext.request.contextPath}/pages/index/resources.js?v=4"></script>
+        <%@ include file="./index/member.html" %>
+        <script src="${pageContext.request.contextPath}/pages/index/member.js?v=4"></script>
         <script src="${pageContext.request.contextPath}/pages/index/route.js?v=5"></script>
     </body>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/webkits/zTree/css/zTreeStyle/zTreeStyle.css">

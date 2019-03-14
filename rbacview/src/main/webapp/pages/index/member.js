@@ -1,8 +1,70 @@
-rbacViewApp.controller('userCtrl', function ($scope, $compile) {
-    $scope.isAdmin = {};
-    $scope.isAdmin = sessionUserInfo.admin;
+var memberTpl = {
+    template: '#member-template',
+    data: function() {
+      return {
+        searchParam: { username: '', nickname: '' }, 
+        memberList: { total: 0, list:[] }, 
+        editMemberInfo: { id: '', username: '', nickname: '', sort:'', createTime: '', updateTime: '', isAdmin: 0, status: '1',  }
+      };
+    }, 
+    methods: {
+      refreshPage: function(page) {
+        var self = this;
+        Tmsp('/rbacs/members?page='+page+'&pageSize=10&username='+this.searchParam.username+
+        "&nickname="+this.searchParam.nickname, 'get').then(function(result) {
+          console.log(result);
+          self.memberList = result.data;
+          }, function(error) {
+            console.log(error);
+          });
+      }, 
+      openEditDlg: function(isAdd) {
+        var dlgTitle  = isAdd ? "添加" : '编辑';
+        var self = this;
+        var dlgIndex = layer.open({
+          type: 1,
+          scrollbar: false,
+          skin: "layer-ext-moon",
+          area: ["500px", "450px"],
+          title: dlgTitle,
+          shadeClose: false,
+          btn: ["确认", "取消"],
+          content: layui.jquery("#editResources"),
+          yes: function() {
+            Tmsp('/rbacs/resources', 'post',addX).then(function(result){
+              if (result.code==200) {
+                self.refreshPage(resourcesList.pageNum);
+                layer.close(dlgIndex);
+              } else {
+                layer.msg(result.message, {
+                  icon: 2,
+                  time: 1000
+                });
+              }
+      
+            }, function(reason) {
+                layer.msg(reason.message, {
+                  icon: 2,
+                  time: 5000
+                });
+            });
+      
+          }
+        });
+      }, 
+      clearSearch: function() {
+        
+      }
+    }, 
+    mounted: function (){
+      this.refreshPage(1)
+    }
+  };
+/*rbacViewApp.controller('userCtrl', function ($scope, $compile) {
+    isAdmin = {};
+    isAdmin = sessionUserInfo.admin;
     // 新增接口信息
-    $scope.openAdd = function() {
+    openAdd = function() {
         var du = layer.open({
             type: 1,
             scrollbar: false,
@@ -13,9 +75,9 @@ rbacViewApp.controller('userCtrl', function ($scope, $compile) {
             btn: ["确认", "取消"],
             content: layui.jquery("#insertUser"),
             yes: function() {
-                Tmsp('/rbacs/members', 'post',$scope.addX).then(function(result) {
+                Tmsp('/rbacs/members', 'post',addX).then(function(result) {
                 if (result.code==200) {
-                    $scope.refreshPage($scope.memberList.pageNum);
+                    refreshPage(memberList.pageNum);
                     layer.close(du);
                 } else {
                     layer.msg(result.message, {
@@ -36,16 +98,16 @@ rbacViewApp.controller('userCtrl', function ($scope, $compile) {
     };
 
   // 修改接口信息
-  $scope.openEdit = function(curX) {
-    $scope.editX = {};
-    $scope.editX.id = curX.id;
-    $scope.editX.username = curX.username;
-    $scope.editX.nickname = curX.nickname;
-    $scope.editX.sort = curX.sort;
-    $scope.editX.create_time = curX.createTime;
-    $scope.editX.update_time = curX.updateTime;
-    $scope.editX.isAdmin = curX.isAdmin;
-    $scope.editX.status = curX.status;
+  openEdit = function(curX) {
+    editX = {};
+    editX.id = curX.id;
+    editX.username = curX.username;
+    editX.nickname = curX.nickname;
+    editX.sort = curX.sort;
+    editX.create_time = curX.createTime;
+    editX.update_time = curX.updateTime;
+    editX.isAdmin = curX.isAdmin;
+    editX.status = curX.status;
     var du = layer.open({
       type: 1,
       scrollbar: false,
@@ -56,10 +118,10 @@ rbacViewApp.controller('userCtrl', function ($scope, $compile) {
       btn: ["确认", "取消"],
       content: layui.jquery("#updateRecord"),
       yes: function() {
-        Tmsp('/rbacs/members', 'put',$scope.editX).then(function(result){
+        Tmsp('/rbacs/members', 'put',editX).then(function(result){
 
           if (result.code==200) {
-            $scope.refreshPage($scope.memberList.pageNum);
+            refreshPage(memberList.pageNum);
             layer.close(du);
           } else {
             layer.msg(result.message, {
@@ -75,7 +137,7 @@ rbacViewApp.controller('userCtrl', function ($scope, $compile) {
     });
   };
     /// 删除接口信息
-    $scope.deleteRecord = function(x) {
+    deleteRecord = function(x) {
         var dr = layer.confirm(
         "确定要删除？",
         {
@@ -89,7 +151,7 @@ rbacViewApp.controller('userCtrl', function ($scope, $compile) {
                         icon: 1,
                         time: 1000
                     });
-                    $scope.refreshPage($scope.memberList.pageNum);
+                    refreshPage(memberList.pageNum);
                     layer.close(dr);
                 } else {
                     layer.msg(result.message, {
@@ -106,23 +168,24 @@ rbacViewApp.controller('userCtrl', function ($scope, $compile) {
         }
         );
     };
-    $scope.clearSearch = function() {
-        $scope.searchX.username='';
-        $scope.searchX.nickname='';
+    clearSearch = function() {
+        searchParam.username='';
+        searchParam.nickname='';
     }
-    $scope.searchX = {};
+    searchParam = {};
     /// 当前查找的过滤条件
-    $scope.refreshPage = function(page) {
-        Tmsp('/rbacs/members?page='+page+'&pageSize=10&username='+$scope.searchX.username+
-        "&nickname="+$scope.searchX.nickname, 'get').then(function(result){
+    refreshPage = function(page) {
+        Tmsp('/rbacs/members?page='+page+'&pageSize=10&username='+searchParam.username+
+        "&nickname="+searchParam.nickname, 'get').then(function(result){
 
         console.log(result);
-        $scope.memberList = result.data;
-        $scope.$apply();
+        memberList = result.data;
+        $apply();
         }, function(error) {
             console.log(error);
         });
     }
-    $scope.clearSearch();
-    $scope.refreshPage(1);
+    clearSearch();
+    refreshPage(1);
   });
+*/

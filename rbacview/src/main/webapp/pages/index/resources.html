@@ -35,7 +35,7 @@
 							<td>{{x.summary}}</td>
 							<td>{{x.servicesName}}</td>
 							<td>
-								<a href="javascript:void(0)" v-on:click="openEdit(x)" class="tablelink">修改</a>
+								<a href="javascript:void(0)" v-on:click="openEditDlg(x)" class="tablelink">修改</a>
 								<a href="javascript:void(0)" v-on:click="deleteRecord(x.id)" class="tablelink">删除</a>
 							</td>
 							<td style="display: none">{{x.description}}</td>
@@ -53,70 +53,37 @@
 					<tr>
 						<th style="height: 40px">接口类型：</th>
 						<td>
-							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="addX.type" />
+							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editResInfo.type" />
 						</td>
 					</tr>
 					<tr>
 						<th style="height: 40px">接口地址：</th>
 						<td>
-							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="addX.path" />
+							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editResInfo.path" />
 						</td>
 					</tr>
 					<tr>
 						<th style="height: 40px">请求方式：</th>
 						<td>
-							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="addX.reqMethod" />
+							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editResInfo.reqMethod" />
 						</td>
 					</tr>
 					<tr>
 						<th style="height: 40px">接口概要：</th>
 						<td>
-							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="addX.summary" />
+							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editResInfo.summary" />
 						</td>
 					</tr>
 					<tr>
 						<th style="height: 40px">服务名(区分大小写)：</th>
 						<td>
-							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="addX.servicesName" />
+							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editResInfo.servicesName" />
 						</td>
 					</tr>
 					<tr>
 						<th style="height: 40px">接口详细说明：</th>
 						<td>
-							<textarea style="width: 200px;border:1px solid #ccc;height: 60px;" v-model="addX.description"></textarea>
-						</td>
-					</tr>
-				</table>
-			</div>
-			<div id="updateRecord" style="width:500px;display: none;z-index:9999999999;position: fixed">
-				<div style="margin-top:10px;"></div>
-				<table style="width: 100%" class="tablelist">
-					<tr>
-						<th style="height: 40px">接口类型：</th>
-						<td>{{editX.type}}</td>
-					</tr>
-					<tr>
-						<th style="height: 40px">接口地址：</th>
-						<td>{{editX.path}}</td>
-					</tr>
-					<tr>
-						<th style="height: 40px">请求方式：</th>
-						<td>{{editX.reqMethod}}</td>
-					</tr>
-					<tr>
-						<th style="height: 40px">接口概要：</th>
-						<td>
-							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editX.summary" />
-						</td>
-					</tr>
-					<tr>
-						<th style="height: 40px">服务名：</th>
-						<td>{{editX.servicesName}}</td>
-					</tr>
-					<tr>
-						<th style="height: 40px">接口详细说明：</th>
-						<td>
-								<textarea style="width: 200px;border:1px solid #ccc;height: 60px;" v-model="editX.description"></textarea>
+							<textarea style="width: 200px;border:1px solid #ccc;height: 60px;" v-model="editResInfo.description"></textarea>
 						</td>
 					</tr>
 				</table>

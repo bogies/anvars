@@ -1,9 +1,8 @@
 var router = new VueRouter({
   routes: [
-    {
-      path: '/resources',
-      component: resourcesTpl
-    }
+    { path: '/', redirect: 'resources' },
+    { path: '/resources', component: resourcesTpl }, 
+    { path: '/member', component: memberTpl }
   ]
 });
 

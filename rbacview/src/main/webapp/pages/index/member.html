@@ -1,19 +1,18 @@
-<%@ page contentType="text/html; charset=utf-8" pageEncoding="UTF-8" %>
-<div id="mainright">
-	<div id="resourceDetailInfo" class="pull-left" style="border-left: 2px solid #ccc;height: 100%;padding:20px;">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<script type="text/x-template" id="member-template">
+	<div class="pull-left" style="border-left: 2px solid #ccc;height: 100%;padding:20px;">
 		<div style="text-align: left;padding-bottom: 20px;width: 100%">
-			<a href="javascript:void(0)" ng-click="openAdd()" class="layui-btn layui-btn-warm layui-btn-sm" style="width: 100px;">新增</a>
+			<a href="javascript:void(0)" v-on:click="openAdd()" class="layui-btn layui-btn-warm layui-btn-sm" style="width: 100px;">新增</a>
 		</div>
 		<form>
-			用户名：<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" ng-model="searchX.username" />
-			姓名：<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" ng-model="searchX.nickname" />
-			<a href="javascript:void(0)" ng-click="refreshPage(1)" class="tablelink">搜索</a>
-			<a href="javascript:void(0)" ng-click="clearSearch()" class="tablelink">清空</a>
+			用户名：<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="searchParam.username" />
+			姓名：<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="searchParam.nickname" />
+			<a href="javascript:void(0)" v-on:click="refreshPage(1)" class="tablelink">搜索</a>
+			<a href="javascript:void(0)" v-on:click="clearSearch()" class="tablelink">清空</a>
 		</form>
 		<table class="tablelist">
 			<thead>
 				<tr>
-					<th style="display: none">用户id</th>
 					<th width="150">用户名</th>
 					<th width="150">姓名</th>
 					<th width="150">排序值</th>
@@ -25,30 +24,29 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="x in memberList.list">
-					<td style="display: none">{{x.id}}</td>
+				<tr v-for="x in memberList.list">
 					<td>{{x.username}}</td>
 					<td>{{x.nickname}}</td>
 					<td>{{x.sort}}</td>
 					<td>{{x.createTime}}</td>
 					<td>{{x.updateTime}}</td>
 					<td>
-						<p ng-if=x.isAdmin=='0'>普通用户 </p>
-						<p ng-if=x.isAdmin=='1'>管理员 </p>
+						<p v-if="x.isAdmin=='1'">管理员 </p>
+						<p v-else>普通用户 </p>
 					</td>
 					<td>	
-						<p ng-if=x.status=='1'>正常 </p>
-						<p ng-if=x.status=='2'>锁定 </p>
+						<p v-if="x.status=='1'">正常 </p>
+						<p v-if="x.status=='2'">锁定 </p>
 					</td>
 					<td>
-						<a href="javascript:void(0)" ng-click="openEdit(x)" class="tablelink">修改</a>
-						<a href="javascript:void(0)" ng-click="deleteRecord(x.id)" class="tablelink">删除</a>
+						<a href="javascript:void(0)" v-on:click="openEdit(x)" class="tablelink">修改</a>
+						<a href="javascript:void(0)" v-on:click="deleteRecord(x.id)" class="tablelink">删除</a>
 					</td>
 				</tr>
 
 			</tbody>
 		</table>
-		<ng-pagehelper-bar pagebar-html="${pageContext.request.contextPath}/i/pagebar-simple.html" goto-page="refreshPage" page-info="memberList"></ng-pagehelper-bar>
+		<pagebar-simple :pageHelperData="memberList" v-on:gotoPage="refreshPage"></pagebar-simple>
 	</div>
 
 <!-- 弹框隐藏页 -->
@@ -57,26 +55,26 @@
 		<table style="width: 100%" class="tablelist">
 			<tr>
 				<th style="height: 40px">用户名：</th>
-				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" ng-model="addX.username" /></td>
+				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="addX.username" /></td>
 			</tr>
 			<tr>
 				<th style="height: 40px">密码	：(。。。。。。。。。密码不为空，长度)</th>
-				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" ng-model="addX.password" /></td>
+				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="addX.password" /></td>
 			</tr>
 			<tr>
 				<th style="height: 40px">姓名：</th>
-				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" ng-model="addX.nickname" /></td>
+				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="addX.nickname" /></td>
 			</tr>
 			<tr>
 				<th style="height: 40px">排序：(。。。。。。。。。只允许数字)</th>
-				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" ng-model="addX.sort" /></td>
+				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="addX.sort" /></td>
 			</tr>
 			<tr>
 				<th style="height: 40px">管理员权限：</th>
 				<td>
-					<p ng-if=isAdmin=='0'>普通用户 </p>
-					<p ng-if=isAdmin=='1'>
-						<select ng-model="addX.isAdmin">
+					<p v-if=isAdmin=='0'>普通用户 </p>
+					<p v-if=isAdmin=='1'>
+						<select v-model="addX.isAdmin">
 							<option value='0'>普通用户</option>
 							<option value='1'>管理员</option>
 						</select>
@@ -86,7 +84,7 @@
 			<tr>
 				<th style="height: 40px">状态：</th>
 				<td>
-					<select ng-model="addX.status">
+					<select v-model="addX.status">
 						<option value='1'>正常</option>
 						<option value='2'>锁定</option>
 					</select>
@@ -103,15 +101,15 @@
 			</tr>
 			<tr>
 				<th style="height: 40px">密码	：(。。。。。。。。。密码不为空，长度)</th>
-				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" ng-model="editX.password" /></td>
+				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editX.password" /></td>
 			</tr>
 			<tr>
 				<th style="height: 40px">姓名：</th>
-				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" ng-model="editX.nickname" /></td>
+				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editX.nickname" /></td>
 			</tr>
 			<tr>
 				<th style="height: 40px">排序：(。。。。。。。。。只允许数字)</th>
-				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" ng-model="editX.sort" /></td>
+				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editX.sort" /></td>
 			</tr>
 			<tr>
 				<th style="height: 40px">创建时间：</th>
@@ -124,9 +122,9 @@
 			<tr>
 				<th style="height: 40px">管理员权限：</th>
 				<td>	
-					<p ng-if=isAdmin=='0'>普通用户 </p>
-					<p ng-if=isAdmin=='1'>
-						<select ng-model="addX.isAdmin">
+					<p v-if=isAdmin=='0'>普通用户 </p>
+					<p v-if=isAdmin=='1'>
+						<select v-model="addX.isAdmin">
 							<option value='0'>普通用户</option>
 							<option value='1'>管理员</option>
 						</select>
@@ -136,7 +134,7 @@
 			<tr>
 				<th style="height: 40px">状态：</th>
 				<td>
-					<select ng-model="editX.status">
+					<select v-model="editX.status">
 						<option value='1'>正常</option>
 						<option value='2'>锁定</option>
 					</select>
@@ -144,4 +142,4 @@
 			</tr>
 		</table>
 	</div>								
-</div>
+</script>
