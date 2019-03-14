@@ -36,6 +36,12 @@ var resourcesTpl = {
       } else {
         dlgTitle  = "添加";
         tmspMethod = 'post';
+        this.editResInfo.id = '';
+        this.editResInfo.path = '';
+        this.editResInfo.reqMethod = '';
+        this.editResInfo.summary = '';
+        this.editResInfo.servicesName = '';
+        this.editResInfo.description = '';
       }
       var self = this;
       var dlgIndex = layer.open({

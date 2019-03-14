@@ -25,10 +25,10 @@
                                 <router-link to="/resources">资源管理</router-link>
                             </li>
                             <li>
-                                <router-link to="/role">角色管理</router-link>
+                                <router-link to="/roles">角色管理</router-link>
                             </li>
                             <li>
-                                <router-link to="/member">用户管理</router-link>
+                                <router-link to="/members">用户管理</router-link>
                             </li>
                         </dl>
                     </li>
@@ -39,14 +39,13 @@
     
         <%@ include file="../pagebar/simple.html" %>
         <%@ include file="./index/resources.html" %>
-        
-        <script src="${pageContext.request.contextPath}/pages/index/resources.js?v=4"></script>
         <%@ include file="./index/member.html" %>
+        <%@ include file="./index/role.html" %>
+        <script src="${pageContext.request.contextPath}/pages/index/resources.js?v=4"></script>
         <script src="${pageContext.request.contextPath}/pages/index/member.js?v=4"></script>
+        <script src="${pageContext.request.contextPath}/pages/index/role.js?v=4"></script>
         <script src="${pageContext.request.contextPath}/pages/index/route.js?v=5"></script>
     </body>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/webkits/zTree/css/zTreeStyle/zTreeStyle.css">
     <script src="${pageContext.request.contextPath}/webkits/zTree/js/jquery.ztree.all.min.js"></script>
-    <!--script src="${pageContext.request.contextPath}/pages/index/member.js?v=5"></script>
-    <script src="${pageContext.request.contextPath}/pages/index/role.js?v=5"></script-->  
 </html>

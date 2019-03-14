@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<script type="text/x-template" id="member-template">
+<script type="text/x-template" id="members-template">
 	<div class="pull-left" style="border-left: 2px solid #ccc;height: 100%;padding:20px;">
 		<div style="text-align: left;padding-bottom: 20px;width: 100%">
-			<a href="javascript:void(0)" v-on:click="openAdd()" class="layui-btn layui-btn-warm layui-btn-sm" style="width: 100px;">新增</a>
+			<a href="javascript:void(0)" v-on:click="openEditDlg()" class="layui-btn layui-btn-warm layui-btn-sm" style="width: 100px;">新增</a>
 		</div>
 		<form>
 			用户名：<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="searchParam.username" />
@@ -39,8 +39,8 @@
 						<p v-if="x.status=='2'">锁定 </p>
 					</td>
 					<td>
-						<a href="javascript:void(0)" v-on:click="openEdit(x)" class="tablelink">修改</a>
-						<a href="javascript:void(0)" v-on:click="deleteRecord(x.id)" class="tablelink">删除</a>
+						<a href="javascript:void(0)" v-on:click="openEditDlg(x)" class="tablelink">修改</a>
+						<a href="javascript:void(0)" v-on:click="deleteMember(x.id)" class="tablelink">删除</a>
 					</td>
 				</tr>
 
@@ -49,8 +49,8 @@
 		<pagebar-simple :pageHelperData="memberList" v-on:gotoPage="refreshPage"></pagebar-simple>
 	</div>
 
-<!-- 弹框隐藏页 -->
-	<div id="insertUser"  style="width:500px;display: none;z-index:9999999999;position: fixed">
+	<!-- 弹框用户编辑页面 -->
+	<div id="editUserInfoDlg"  style="width:500px;display: none;z-index:9999999999;position: fixed">
 		<div style="margin-top:10px;"></div>
 		<table style="width: 100%" class="tablelist">
 			<tr>
@@ -91,55 +91,5 @@
 				</td>
 			</tr>
 		</table>
-	</div>			
-	<div id="updateRecord"  style="width:500px;display: none;z-index:9999999999;position: fixed">
-		<div style="margin-top:10px;"></div>
-		<table style="width: 100%" class="tablelist">
-			<tr>
-				<th style="height: 40px">用户名：(。。。。。。。。。不为空，长度)	</th>
-				<td>{{editX.username}}</td>
-			</tr>
-			<tr>
-				<th style="height: 40px">密码	：(。。。。。。。。。密码不为空，长度)</th>
-				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editX.password" /></td>
-			</tr>
-			<tr>
-				<th style="height: 40px">姓名：</th>
-				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editX.nickname" /></td>
-			</tr>
-			<tr>
-				<th style="height: 40px">排序：(。。。。。。。。。只允许数字)</th>
-				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editX.sort" /></td>
-			</tr>
-			<tr>
-				<th style="height: 40px">创建时间：</th>
-				<td>{{editX.create_time}}</td>
-			</tr>
-			<tr>
-				<th style="height: 40px">修改时间：</th>
-				<td>{{editX.update_time}}</td>
-			</tr>
-			<tr>
-				<th style="height: 40px">管理员权限：</th>
-				<td>	
-					<p v-if=isAdmin=='0'>普通用户 </p>
-					<p v-if=isAdmin=='1'>
-						<select v-model="addX.isAdmin">
-							<option value='0'>普通用户</option>
-							<option value='1'>管理员</option>
-						</select>
-					</p>
-				</td>
-			</tr>
-			<tr>
-				<th style="height: 40px">状态：</th>
-				<td>
-					<select v-model="editX.status">
-						<option value='1'>正常</option>
-						<option value='2'>锁定</option>
-					</select>
-				</td>
-			</tr>
-		</table>
-	</div>								
+	</div>
 </script>
