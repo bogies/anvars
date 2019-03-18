@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.ants.rbacs.dao.MembersDao">
-	<resultMap type="org.ants.common.entity.MembersEntity" id="memberInfo">
+<mapper namespace="org.bogies.rbacs.dao.MembersDao">
+	<resultMap type="org.bogies.common.entity.MembersEntity" id="memberInfo">
 		<id property="id" column="id"/>
 		<result property="username" column="username"/>
 		<result property="password" column="password"/>
@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="admin" column="is_admin"/>
 		<result property="status" column="status"/>
 	</resultMap>
-	<resultMap type="org.ants.common.entity.MembersEntity" id="memberBaseInfo">
+	<resultMap type="org.bogies.common.entity.MembersEntity" id="memberBaseInfo">
 		<id property="id" column="id"/>
 		<result property="username" column="username"/>
 		<result property="nickname" column="nickname"/>
@@ -77,7 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="countByUsername" resultType="Integer">
 		SELECT count(id) uc FROM members where username=#{username}
 	</select>
-	<select id="findRoles" resultMap="org.ants.rbacs.dao.RoleDao.roleInfo">
+	<select id="findRoles" resultMap="org.bogies.rbacs.dao.RoleDao.roleInfo">
 		select u.* from members u 
 		left join rbac_role_users ru on u.id=ru.user_id
 		where ru.role_id=#{roleId}

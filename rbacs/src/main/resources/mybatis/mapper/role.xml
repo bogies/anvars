@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.ants.rbacs.dao.RoleDao">
-	<resultMap type="org.ants.rbacs.model.RoleModel" id="roleInfo">
+<mapper namespace="org.bogies.rbacs.dao.RoleDao">
+	<resultMap type="org.bogies.rbacs.model.RoleModel" id="roleInfo">
 		<id property="id" column="id"/>
 		<result property="id" column="id"/>
 		<result property="name" column="name"/>
@@ -67,24 +67,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			and resource_id in (${resIds})
 		</if>
 	</delete>
-	<select id="getMembers" resultMap="org.ants.rbacs.dao.MembersDao.memberBaseInfo">
+	<select id="getMembers" resultMap="org.bogies.rbacs.dao.MembersDao.memberBaseInfo">
 		select u.id,u.username,u.nickname,u.is_admin,u.status from role_users ur 
 		left join members u on u.id=ur.user_id 
 		where ur.role_id=#{roleId}
 	</select>
 	<!-- 角色未授权的用户 -->
-	<select id="getUnauthMembers" resultMap="org.ants.rbacs.dao.MembersDao.memberBaseInfo">
+	<select id="getUnauthMembers" resultMap="org.bogies.rbacs.dao.MembersDao.memberBaseInfo">
 		select u.id,u.username,u.nickname from members u 
 		where (select count(1) as num from role_users ru where ru.role_id=#{roleId} and ru.user_id=u.id)=0
 	</select>
 	<!-- 获取角色已授权的资源 -->
-	<select id="getRes" resultMap="org.ants.rbacs.dao.ResourcesDao.resourcesInfo">
+	<select id="getRes" resultMap="org.bogies.rbacs.dao.ResourcesDao.resourcesInfo">
 		select r.id,r.type,r.path,r.req_method,r.summary,r.services_name from role_resources rr 
 		left join resources r on r.id=rr.resource_id
 		where rr.role_id=#{roleId}
 	</select>
 	<!-- 获取角色未授权的资源 -->
-	<select id="getUnauthRes" resultMap="org.ants.rbacs.dao.ResourcesDao.resourcesInfo">
+	<select id="getUnauthRes" resultMap="org.bogies.rbacs.dao.ResourcesDao.resourcesInfo">
 		select r.id,r.type,r.path,r.req_method,r.summary,r.services_name from resources r 
 		where (select count(1) as num from role_resources rr 
 		where rr.role_id=#{roleId} and rr.resource_id=r.id)=0

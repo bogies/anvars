@@ -12,7 +12,7 @@ http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
 ">
 	<!-- 可解决@ResponseBody返回的json字符串乱码 -->
 	<mvc:annotation-driven />
-	<context:component-scan base-package="org.ants.tommy" />
+	<context:component-scan base-package="org.bogies.tommy" />
 	<!-- JSP视图文件解析配置 -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -31,7 +31,7 @@ http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
 
 	<mvc:interceptors>
 		<!-- 使用bean定义一个Interceptor，直接定义在mvc:interceptors根下面的Interceptor将拦截所有的请求 -->
-		<bean class="org.ants.tommy.session.SecurityInterceptor" />
+		<bean class="org.bogies.tommy.session.SecurityInterceptor" />
 	
 	</mvc:interceptors>
 

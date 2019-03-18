@@ -4,7 +4,7 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.ants</groupId>
+		<groupId>org.bogies</groupId>
 		<artifactId>anvars</artifactId>
 		<version>1.0.0</version>
 	</parent>
@@ -16,7 +16,7 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>org.ants</groupId>
+			<groupId>org.bogies</groupId>
 			<artifactId>common</artifactId>
 			<version>1.0.0</version>
 		</dependency>
@@ -223,7 +223,7 @@
 							<!--jar包不包含唯一版本标识 -->
 							<useUniqueVersions>false</useUniqueVersions>
 							<!--指定入口类 -->
-							<mainClass>org.ants.rbacs.RbacApplication</mainClass>
+							<mainClass>org.bogies.rbacs.RbacApplication</mainClass>
 						</manifest>
 						<manifestEntries>
 							<!--MANIFEST.MF 中 Class-Path 加入资源文件目录 -->

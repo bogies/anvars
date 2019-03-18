@@ -15,5 +15,5 @@
 
 
 	<!-- service包(自动注入) -->
-	<context:component-scan base-package="org.ants.tommy" />
+	<context:component-scan base-package="org.bogies.tommy" />
 </beans>
