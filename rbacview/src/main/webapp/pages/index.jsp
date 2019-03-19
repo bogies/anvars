@@ -43,7 +43,7 @@
         <%@ include file="./index/role.html" %>
         <script src="${pageContext.request.contextPath}/pages/index/resources.js?v=4"></script>
         <script src="${pageContext.request.contextPath}/pages/index/member.js?v=4"></script>
-        <script src="${pageContext.request.contextPath}/pages/index/role.js?v=4"></script>
+        <script src="${pageContext.request.contextPath}/pages/index/role.js?v=5"></script>
         <script src="${pageContext.request.contextPath}/pages/index/route.js?v=5"></script>
     </body>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/webkits/zTree/css/zTreeStyle/zTreeStyle.css">

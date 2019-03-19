@@ -25,6 +25,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
 		</where>
 	</select>
+	<select id="getResInRoles" resultMap="roleInfo">
+        SELECT r.id,r.name FROM role_resources rr 
+        left join roles r on rr.role_id=r.id 
+        where rr.resource_id=#{resId}
+    </select>
 	<insert id="add">
 		INSERT INTO roles
 		(id,name,description,is_reserved)

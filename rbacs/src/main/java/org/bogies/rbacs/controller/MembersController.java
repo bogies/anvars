@@ -165,7 +165,9 @@ public class MembersController {
     })
 	@ResponseBody
 	@RequestMapping(value = "/roles", method=RequestMethod.GET)
-	public Result getUserRoles(@QueryParam("userId") String userId, HttpSession session) {
+	public Result getUserRoles(@QueryParam("userId") String userId, 
+			@QueryParam("page") int page, @QueryParam("pageSize") int pageSize, 
+			HttpSession session) {
 		if (StringUtils.isBlank(userId)) {
 			return Result.fail(ErrorConstants.SE_REQ_PARAMS);
 		}
@@ -176,8 +178,8 @@ public class MembersController {
 			logger.info(rlt.getMessage());
 		}
 		
-		List<RoleModel> roleList = userService.findRoles(userId);
-		if (null == roleList) {
+		PageInfo<?> roleList = userService.findRoles(page, pageSize, userId);
+		if (null != roleList) {
 			rlt = Result.success(roleList);
 		} else {
 			rlt = Result.fail(ErrorConstants.SE_INTERNAL.getCode(), "获取用户角色列表失败. UserID: "+userId);

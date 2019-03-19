@@ -78,16 +78,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT count(id) uc FROM members where username=#{username}
 	</select>
 	<select id="findRoles" resultMap="org.bogies.rbacs.dao.RoleDao.roleInfo">
-		select u.* from members u 
-		left join rbac_role_users ru on u.id=ru.user_id
-		where ru.role_id=#{roleId}
-		<if test="user.username!=null and user.username!=''">
-			and u.username like '%${user.username}%'
-		</if>
-		<if test="user.name!=null and user.name!=''">
-			and u.nickname like '%${user.name}%'
-		</if>
-		order by order_by
+		select r.id,r.name from roles r 
+		left join role_users ru on r.id=ru.role_id
+		where ru.user_id=#{userId}
 	</select>
 	<delete id="clearUserRoles">
 		DELETE FROM rbac_role_users WHERE user_id=#{userId}

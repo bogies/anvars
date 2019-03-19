@@ -19,10 +19,9 @@
 <script src="${pageContext.request.contextPath}/webkits/jquery/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/jquery/jquery.form.min.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/vue/vue.min.js"></script>
-
 <script src="${pageContext.request.contextPath}/webkits/vue/vue-router.min.js"></script>
-
 <script src="${pageContext.request.contextPath}/webkits/vue/ants-component.js"></script>
+<script src="${pageContext.request.contextPath}/webkits/moment-with-locales.min.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/promise-6.1.0.min.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/bluebird.core.min.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/base64.min.js"></script>

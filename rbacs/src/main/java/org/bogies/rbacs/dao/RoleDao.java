@@ -25,6 +25,12 @@ public interface RoleDao {
 	 */
 	public List<RoleModel> getRoles(@Param("role") RoleModel role);
 	/**
+	 * 
+	 * @param role
+	 * @return：List<RoleModel>
+	 */
+	public List<RoleModel> getResInRoles(@Param("resId") String resId);
+	/**
 	 * TODO
 	 * @param role
 	 * @return：int

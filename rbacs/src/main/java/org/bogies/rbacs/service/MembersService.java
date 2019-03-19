@@ -64,7 +64,7 @@ public interface MembersService {
 	 * @param userId
 	 * @return：List<RoleModel>
 	 */
-	public List<RoleModel> findRoles(String userId);
+	public PageInfo<RoleModel> findRoles(int page, int pageSize, String userId);
 	/**
 	 * TODO 添加用户
 	 * @param insertLi

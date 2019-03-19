@@ -134,8 +134,21 @@ public class MembersServiceImpl implements MembersService {
 	}
 
 	@Override
-	public List<RoleModel> findRoles(String userId) {
-		return null;
+	public PageInfo<RoleModel> findRoles(int page, int pageSize, String userId) {
+		if (page < 1) {
+			page = 1;
+		}
+		if (pageSize < 1) {
+			pageSize = 10;
+		}
+		PageHelper.startPage(page, pageSize);
+		PageInfo<RoleModel> roleListPage = null;
+		List<RoleModel> roleList = membersDao.findRoles(userId);
+		if (null != roleList) {
+			roleListPage = new PageInfo<RoleModel>(roleList);
+		}
+		
+		return roleListPage;
 	}
 	@Override
 	public int addUserRole(String userId, String[] roleIds) {

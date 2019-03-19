@@ -28,6 +28,14 @@ public interface RoleService {
 	 */
 	public PageInfo<?> getRoles(RoleModel roleFilter, int page, int pageSize);
 	/**
+	 * 获取资源所属的角色列表
+	 * @param resId
+	 * @param page
+	 * @param pageSize
+	 * @return：PageInfo
+	 */
+	public PageInfo<?> getResInRoles(String resId, int page, int pageSize);
+	/**
 	 * 新增角色
 	 * @param role
 	 * @return：int

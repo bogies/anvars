@@ -53,8 +53,27 @@ public class RoleController {
 			rlt = Result.success(roleListPage);
 		}
 		
-		LOGGER.info("test log. role num:{}", roleListPage.getPageNum());
-
+		return rlt;
+	}
+	@ApiOperation(value="获取资源所属的角色列表", notes="根据资源ID获取角色列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "resId", value = "资源id", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "page", value = "请求的页码", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "pageSize", value = "每面数量", required = true, dataType = "int")
+    })
+	@ResponseBody
+	@RequestMapping(value="/incres", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	public Result getResInRoles(HttpSession session, 
+			@QueryParam("page") int page, @QueryParam("pageSize") int pageSize, 
+			@QueryParam("resId") String resId) {
+		PageInfo<?> roleListPage = roleService.getResInRoles(resId, page, pageSize);
+		Result rlt = null;
+		if (null == roleListPage) {
+			rlt = Result.fail(ErrorConstants.SE_INTERNAL.getCode(), "获取角色列表失败");
+		} else {
+			rlt = Result.success(roleListPage);
+		}
+		
 		return rlt;
 	}
 	@ApiOperation(value="添加角色", notes="")

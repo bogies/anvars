@@ -64,7 +64,7 @@ public interface MembersDao {
 	 * @param user
 	 * @return：List<RoleModel>
 	 */
-	public List<RoleModel> findRoles(@Param("user") MembersEntity user);
+	List<RoleModel> findRoles(@Param("userId") String userId);
 	/**
 	 * 修改用户基本信息
 	 * @param loginUser

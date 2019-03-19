@@ -1,95 +1,117 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<script type="text/x-template" id="members-template">
-	<div class="pull-left" style="border-left: 2px solid #ccc;height: 100%;padding:20px;">
-		<div style="text-align: left;padding-bottom: 20px;width: 100%">
-			<a href="javascript:void(0)" v-on:click="openEditDlg()" class="layui-btn layui-btn-warm layui-btn-sm" style="width: 100px;">新增</a>
+	<script type="text/x-template" id="members-template">
+		<div id="mainright">
+			<div class="pull-left" style="border-left: 2px solid #ccc;height: 100%;padding:20px;">
+				<div style="text-align: left;padding-bottom: 20px;width: 100%">
+					<a href="javascript:void(0)" v-on:click="openEditMemberDlg()" class="layui-btn layui-btn-warm layui-btn-sm" style="width: 100px;">新增</a>
+				</div>
+				<form>
+					用户名：
+					<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="searchParam.username" /> 姓名：
+					<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="searchParam.nickname" />
+					<a href="javascript:void(0)" v-on:click="refreshPage(1)" class="tablelink">搜索</a>
+					<a href="javascript:void(0)" v-on:click="clearSearch()" class="tablelink">清空</a>
+				</form>
+				<table class="tablelist">
+					<thead>
+						<tr>
+							<th width="150">用户名</th>
+							<th width="150">姓名</th>
+							<th width="150">状态</th>
+							<th width="150">查看</th>
+							<th width="150">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="x in memberList.list">
+							<td>{{x.username}}</td>
+							<td>{{x.nickname}}</td>
+							<td>
+								<p v-if="x.status==1">正常</p>
+								<p v-else>锁定</p>
+							</td>
+							<td>
+								<a href="javascript:void(0)" v-on:click="showRoles(1, x.id)" class="tablelink">角色</a>
+							</td>
+							<td>
+								<a href="javascript:void(0)" v-on:click="openEditMemberDlg(x)" class="tablelink">修改</a>
+								<a href="javascript:void(0)" v-on:click="deleteMember(x.id)" class="tablelink">删除</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<pagebar-simple :pageHelperData="memberList" v-on:gotoPage="refreshPage"></pagebar-simple>
+			</div>
+			<!-- 用户所属的角色 -->
+			<div id="userRolesDlg" style="display:none">
+				<table class="tablelist">
+					<thead>
+						<tr>
+							<th width="150">角色名名称</th>
+							<th width="150">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="x in userInRoles.list">
+							<td>{{x.name}}</td>
+							<td>
+								<a href="javascript:void(0)" v-on:click="deleteUserFromRole(x.id)" class="tablelink">删除</a>
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+				<pagebar-simple :pageHelperData="userInRoles" v-on:gotoPage="showRoles"></pagebar-simple>
+			</div>
+			<!-- 用户编辑窗口 -->
+			<div id="editUserInfoDlg" style="display: none">
+				<table style="width: 100%" class="tablelist">
+					<tr>
+						<th style="height: 40px">用户名：</th>
+						<td>
+							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editMemberInfo.username" />
+						</td>
+					</tr>
+					<tr>
+						<th style="height: 40px">密码 ：(。。。。。。。。。密码不为空，长度)</th>
+						<td>
+							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editMemberInfo.password" />
+						</td>
+					</tr>
+					<tr>
+						<th style="height: 40px">姓名：</th>
+						<td>
+							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editMemberInfo.nickname" />
+						</td>
+					</tr>
+					<tr>
+						<th style="height: 40px">排序：(。。。。。。。。。只允许数字)</th>
+						<td>
+							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editMemberInfo.sort" />
+						</td>
+					</tr>
+					<tr>
+						<th style="height: 40px">管理员权限：</th>
+						<td>
+							<p v-if="editMemberInfo.admin==1">
+								<select v-model="editMemberInfo.admin">
+									<option value='0'>普通用户</option>
+									<option value='1'>管理员</option>
+								</select>
+							</p>
+							<p v-else>普通用户</p>
+						</td>
+					</tr>
+					<tr>
+						<th style="height: 40px">状态：</th>
+						<td>
+							<select v-model="editMemberInfo.status">
+								<option value='1'>正常</option>
+								<option value='2'>锁定</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</div>
 		</div>
-		<form>
-			用户名：<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="searchParam.username" />
-			姓名：<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="searchParam.nickname" />
-			<a href="javascript:void(0)" v-on:click="refreshPage(1)" class="tablelink">搜索</a>
-			<a href="javascript:void(0)" v-on:click="clearSearch()" class="tablelink">清空</a>
-		</form>
-		<table class="tablelist">
-			<thead>
-				<tr>
-					<th width="150">用户名</th>
-					<th width="150">姓名</th>
-					<th width="150">排序值</th>
-					<th width="150">创建时间</th>
-					<th width="300">修改时间</th>
-					<th width="150">管理员权限</th>
-					<th width="150">状态</th>
-					<th width="150">操作</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="x in memberList.list">
-					<td>{{x.username}}</td>
-					<td>{{x.nickname}}</td>
-					<td>{{x.sort}}</td>
-					<td>{{x.createTime}}</td>
-					<td>{{x.updateTime}}</td>
-					<td>
-						<p v-if="x.isAdmin=='1'">管理员 </p>
-						<p v-else>普通用户 </p>
-					</td>
-					<td>	
-						<p v-if="x.status=='1'">正常 </p>
-						<p v-if="x.status=='2'">锁定 </p>
-					</td>
-					<td>
-						<a href="javascript:void(0)" v-on:click="openEditDlg(x)" class="tablelink">修改</a>
-						<a href="javascript:void(0)" v-on:click="deleteMember(x.id)" class="tablelink">删除</a>
-					</td>
-				</tr>
-
-			</tbody>
-		</table>
-		<pagebar-simple :pageHelperData="memberList" v-on:gotoPage="refreshPage"></pagebar-simple>
-	</div>
-
-	<!-- 弹框用户编辑页面 -->
-	<div id="editUserInfoDlg"  style="width:500px;display: none;z-index:9999999999;position: fixed">
-		<div style="margin-top:10px;"></div>
-		<table style="width: 100%" class="tablelist">
-			<tr>
-				<th style="height: 40px">用户名：</th>
-				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="addX.username" /></td>
-			</tr>
-			<tr>
-				<th style="height: 40px">密码	：(。。。。。。。。。密码不为空，长度)</th>
-				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="addX.password" /></td>
-			</tr>
-			<tr>
-				<th style="height: 40px">姓名：</th>
-				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="addX.nickname" /></td>
-			</tr>
-			<tr>
-				<th style="height: 40px">排序：(。。。。。。。。。只允许数字)</th>
-				<td><input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="addX.sort" /></td>
-			</tr>
-			<tr>
-				<th style="height: 40px">管理员权限：</th>
-				<td>
-					<p v-if=isAdmin=='0'>普通用户 </p>
-					<p v-if=isAdmin=='1'>
-						<select v-model="addX.isAdmin">
-							<option value='0'>普通用户</option>
-							<option value='1'>管理员</option>
-						</select>
-					</p>
-				</td>
-			</tr>
-			<tr>
-				<th style="height: 40px">状态：</th>
-				<td>
-					<select v-model="addX.status">
-						<option value='1'>正常</option>
-						<option value='2'>锁定</option>
-					</select>
-				</td>
-			</tr>
-		</table>
-	</div>
-</script>
+	</script>
