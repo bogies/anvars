@@ -137,7 +137,6 @@ var memberTpl = {
 			var self = this;
 			Tmsp('/rbacs/members/roles?page='+page+'&pageSize=10&userId='+this.curUserId, 'GET').then(function (result) {
 				if (result.code == 200) {
-                    console.log(result);
 					self.userInRoles = result.data;
 				} else {
 					layer.msg(result.message, {
@@ -162,6 +161,32 @@ var memberTpl = {
 				shadeClose: false,
 				btn: ["关闭"],
 				content: layui.jquery("#userRolesDlg")
+			});
+		}, 
+		deleteUserFromRole: function(roleId) {
+			var self = this;
+			Tmsp('/rbacs/role/members?roleId='+roleId+'&userIds='+this.curUserId, 'DELETE').then(function (result) {
+				if (result.code == 200) {
+                    ListUtils.remove(self.userInRoles.list, 'id', roleId);
+                    if (self.userInRoles.list.length==0) {
+                        self.userInRoles.total = 0;
+                    }
+					layer.msg("删除成功", {
+						icon: 1,
+						time: 1000
+					});
+				} else {
+					layer.msg(result.message, {
+						icon: 2,
+						time: 1000
+					});
+				}
+
+			}, function (reason) {
+				layer.msg(reason.message, {
+					icon: 2,
+					time: 5000
+				});
 			});
 		}
     },

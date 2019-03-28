@@ -48,7 +48,7 @@ public interface ResourcesDao {
 	 * @param resId
 	 * @return：List<RoleModel>
 	 */
-	public List<RoleModel> queryResRoles(String resId);
+	public List<RoleModel> getInRoles(String resId);
 	/**
 	 * Insert Batch Swagger related data
 	 * @param insertByBatch

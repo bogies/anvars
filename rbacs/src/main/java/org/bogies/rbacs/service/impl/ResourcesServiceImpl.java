@@ -103,8 +103,21 @@ public class ResourcesServiceImpl implements ResourcesService {
 		return rlt;
 	}
 	@Override
-	public List<RoleModel> getResourceRoles(String resId) {
-		return resDao.queryResRoles(resId);
+	public PageInfo<RoleModel> getResourceRoles(int page, int pageSize, String resId) {
+		if (page < 1) {
+			page = 1;
+		}
+		if (pageSize < 1) {
+			pageSize = 10;
+		}
+		PageHelper.startPage(page, pageSize);
+		PageInfo<RoleModel> roleListPage = null;
+		List<RoleModel> roleList = resDao.getInRoles(resId);
+		if (null != roleList) {
+			roleListPage = new PageInfo<RoleModel>(roleList);
+		}
+		
+		return roleListPage;
 	}
 	@Override
 	public List<ResourcesModel> extractSwaggerApiDocs(String httpRes,String servicesName) {

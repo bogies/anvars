@@ -9,7 +9,6 @@ import org.bogies.common.constants.ErrorConstants;
 import org.bogies.common.entity.JWTPayloadEntity;
 import org.bogies.common.entity.Result;
 import org.bogies.common.utils.ServiceAuthToken;
-import org.bogies.rbacs.model.RoleModel;
 import org.bogies.rbacs.config.JWTConfig;
 import org.bogies.common.entity.MembersEntity;
 import org.bogies.rbacs.service.MembersService;

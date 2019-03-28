@@ -49,9 +49,9 @@ public interface ResourcesService {
 	/**
 	 * 拥有资源的角色列表
 	 * @param resId
-	 * @return：List<RoleModel>
+	 * @return：分页的角色列表
 	 */
-	public List<RoleModel> getResourceRoles(String resId);
+	public PageInfo<RoleModel> getResourceRoles(int page, int pageSize, String resId);
 	/**TODO Filter Swagger Response Data
 	 * @param ztreeData
 	 * @param serverId

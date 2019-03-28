@@ -25,7 +25,7 @@ var resourcesTpl = {
 				id: '',
 				type: '',
 				path: '',
-				reqMethod: '',
+				reqMethod: 'GET',
 				summary: '',
 				servicesName: '',
 				description: ''
@@ -54,7 +54,7 @@ var resourcesTpl = {
 				this.editResInfo.id = resInfo.id;
 				this.editResInfo.type = resInfo.type;
 				this.editResInfo.path = resInfo.path;
-				this.editResInfo.reqMethod = resInfo.reqMethod;
+				this.editResInfo.reqMethod = resInfo.reqMethod.toUpperCase();
 				this.editResInfo.summary = resInfo.summary;
 				this.editResInfo.servicesName = resInfo.servicesName;
 				this.editResInfo.description = resInfo.description;
@@ -64,7 +64,7 @@ var resourcesTpl = {
 				this.editResInfo.id = '';
 				this.editResInfo.type = '';
 				this.editResInfo.path = '';
-				this.editResInfo.reqMethod = '';
+				this.editResInfo.reqMethod = 'GET';
 				this.editResInfo.summary = '';
 				this.editResInfo.servicesName = '';
 				this.editResInfo.description = '';
@@ -142,10 +142,9 @@ var resourcesTpl = {
 				this.curResId = resId;
 			}
 			var self = this;
-			Tmsp('/rbacs/role/incres?page='+page+'&pageSize=10&resId='+this.curResId, 'GET').then(function (result) {
+			Tmsp('/rbacs/resources/roles?page='+page+'&pageSize=10&resId='+this.curResId, 'GET').then(function (result) {
 				if (result.code == 200) {
 					self.resInRoles = result.data;
-					console.log(self.resInRoles);
 				} else {
 					layer.msg(result.message, {
 						icon: 2,
@@ -169,6 +168,32 @@ var resourcesTpl = {
 				shadeClose: false,
 				btn: ["关闭"],
 				content: layui.jquery("#resRolesDlg")
+			});
+		}, 
+		deleteResFromRole: function(roleId) {
+			var self = this;
+			Tmsp('/rbacs/role/resources?roleId='+roleId+'&resIds='+this.curResId, 'DELETE').then(function (result) {
+				if (result.code == 200) {
+					ListUtils.remove(self.resInRoles.list, 'id', roleId);
+					if (self.resInRoles.list.length==0) {
+                        self.resInRoles.total = 0;
+                    }
+					layer.msg("删除成功", {
+						icon: 1,
+						time: 1000
+					});
+				} else {
+					layer.msg(result.message, {
+						icon: 2,
+						time: 1000
+					});
+				}
+
+			}, function (reason) {
+				layer.msg(reason.message, {
+					icon: 2,
+					time: 5000
+				});
 			});
 		}
 	},

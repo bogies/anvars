@@ -65,4 +65,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="existById" resultType="java.lang.Integer">
 		SELECT count(*) FROM resources WHERE id=#{idMd5};
 	</select>
+	<select id="getInRoles" resultMap="org.bogies.rbacs.dao.RoleDao.roleInfo">
+        SELECT r.id,r.name FROM role_resources rr 
+        left join roles r on rr.role_id=r.id 
+        where rr.resource_id=#{resId}
+    </select>
 </mapper>

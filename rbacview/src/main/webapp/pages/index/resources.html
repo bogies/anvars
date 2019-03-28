@@ -92,7 +92,12 @@
 					<tr>
 						<th style="height: 40px">请求方式：</th>
 						<td>
-							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editResInfo.reqMethod" />
+							<select v-model="editResInfo.reqMethod">
+								<option value="GET">GET</option>
+								<option value="POST">POST</option>
+								<option value="PUT">PUT</option>
+								<option value="DELETE">DELETE</option>
+							</select>
 						</td>
 					</tr>
 					<tr>

@@ -72,23 +72,6 @@ public class RoleServiceImpl implements RoleService {
 		return roleListPage;
 	}
 	@Override
-	public PageInfo<?> getResInRoles(String resId, int page, int pageSize) {
-		if (page < 1) {
-			page = 1;
-		}
-		if (pageSize < 1) {
-			pageSize = 10;
-		}
-		PageHelper.startPage(page, pageSize);
-		PageInfo<RoleModel> roleListPage = null;
-		List<RoleModel> roleList = roleDao.getResInRoles(resId);
-		if (null != roleList) {
-			roleListPage = new PageInfo<RoleModel>(roleList);
-		}
-		
-		return roleListPage;
-	}
-	@Override
 	public RoleModel getById(String id) {
 		return roleDao.getById(id);
 	}
