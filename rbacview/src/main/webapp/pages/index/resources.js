@@ -188,7 +188,6 @@ var resourcesTpl = {
 						time: 1000
 					});
 				}
-
 			}, function (reason) {
 				layer.msg(reason.message, {
 					icon: 2,
