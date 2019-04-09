@@ -8,12 +8,12 @@ public enum Term {
 
 	/************** DbPool 初始化参数配置 **************/
 	
-	DbPool_Url("jdbc:mysql://code.ku8.info:8081/jrbac?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true"),
+	DbPool_Url("jdbc:mysql://localhost:3306/rbac?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true"),
 	DbPool_UserName("root"),
-	DbPool_Password("mc59LsQ^b,VEWR7q"),
+	DbPool_Password("123456"),
 		
 	/************** resources Table 参数配置 **************/
-	FILE_PATH("D:\\Gjy\\Project\\anvars\\RbacView\\src\\main\\webapp\\pages"),
+	FILE_PATH("/one/Ext/source/anvars/rbacview/src/main/webapp/pages"),
 	REQ_METHOD("get"),
 	SERVICES_NAME("RbacView")
 	;

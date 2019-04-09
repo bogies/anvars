@@ -8,9 +8,9 @@ public enum Terms {
 
 	/************** DbPool 初始化参数配置 **************/
 	
-	DbPool_Url("jdbc:mysql://code.ku8.info:8081/jrbac?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true"),
+	DbPool_Url("jdbc:mysql://localhost:3306/rbac?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true"),
 	DbPool_UserName("root"),
-	DbPool_Password("mc59LsQ^b,VEWR7q");
+	DbPool_Password("123456");
 		
 	private String values;
 

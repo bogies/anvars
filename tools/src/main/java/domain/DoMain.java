@@ -3,6 +3,7 @@ package domain;
 import java.io.IOException;
 
 import base.Term;
+import domain.DoMainImpl;
 
 public class DoMain{
 

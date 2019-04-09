@@ -24,7 +24,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select() // 选择那些路径和api会生成document
-                .apis(RequestHandlerSelectors.basePackage("org.ants"))
+                .apis(RequestHandlerSelectors.basePackage("org.bogies"))
                 .build();
     }
 
