@@ -22,11 +22,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="status" column="status"/>
 	</resultMap>
 	<insert id="insert">
-		INSERT INTO members (id, username, password, nickname, sort, create_time, update_time, is_admin, status) 
-		VALUES 
-		 <foreach collection="list" item="res" index="index" separator=",">
-           (#{res.id},#{res.username},#{res.password},#{res.nickname},#{res.sort},#{res.createTime},#{res.updateTime},#{res.isAdmin},#{res.status})
-        </foreach>
+		INSERT INTO members (id, username, password, nickname, sort, create_time, update_time, status) 
+		VALUES (#{member.id},#{member.username},#{member.password},
+		#{member.nickname},#{member.sort},#{member.createTime},
+		#{member.updateTime},#{member.status})
 	</insert>
 	<delete id="deleteById">
 		DELETE FROM members WHERE id=#{id}

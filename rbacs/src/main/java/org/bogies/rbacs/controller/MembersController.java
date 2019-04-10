@@ -1,7 +1,5 @@
 package org.bogies.rbacs.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.QueryParam;
@@ -10,7 +8,7 @@ import org.bogies.common.entity.JWTPayloadEntity;
 import org.bogies.common.entity.Result;
 import org.bogies.common.utils.ServiceAuthToken;
 import org.bogies.rbacs.config.JWTConfig;
-import org.bogies.common.entity.MembersEntity;
+import org.bogies.common.entity.MemberEntity;
 import org.bogies.rbacs.service.MembersService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -37,8 +35,8 @@ import io.swagger.annotations.ApiOperation;
  */
 public class MembersController {
 	private Logger logger = LoggerFactory.getLogger(MembersController.class);
-	/// 其他服务端验证时间戳允许误差, 10秒 
-	private static final int TIMESTAMP_DEV = 10000;
+	/// 其他服务端验证时间戳允许误差, 60秒 
+	private static final int TIMESTAMP_DEV = 60000;
 	@Autowired
 	private JWTConfig jwtConfig;
 	@Autowired
@@ -56,7 +54,7 @@ public class MembersController {
 			return Result.fail(ErrorConstants.SE_REQ_PARAMS);
 		}
 		
-		MembersEntity user = userService.login(username, password);
+		MemberEntity user = userService.login(username, password);
 		Result rlt;
 		if (null != user) {
 			JWTPayloadEntity payload = new JWTPayloadEntity(user.getId(), user.getUsername());
@@ -99,48 +97,52 @@ public class MembersController {
 	}
 	@ApiOperation(value="获取用户列表或查找用户", notes="")
     @ApiImplicitParams({
-	    	@ApiImplicitParam(name = "page", value = "请求的页码", required = true, dataType = "int"),
-	        @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "filter", value = "members 实体类", required = false, dataType = "MembersEntity")
+	    	@ApiImplicitParam(name="page", value = "请求的页码", required = true, dataType = "int"),
+	        @ApiImplicitParam(name="pageSize", value = "每页数量", required = true, dataType = "int"),
+	        @ApiImplicitParam(name="username", value="要查找用户名", required = true, dataType="String"),
+            @ApiImplicitParam(name="nickname", value="要查找的姓名或昵称", required = true, dataType="String")
     })
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public Result getUsers(MembersEntity filter,@QueryParam("page") int page, @QueryParam("pageSize") int pageSize) {
+	public Result getUsers(MemberEntity filter, @QueryParam("page") int page, 
+			@QueryParam("pageSize") int pageSize) {
 		
-		PageInfo<MembersEntity> userList = userService.getUsers(filter,page,pageSize);
+		PageInfo<MemberEntity> userList = userService.getUsers(filter, page, pageSize);
 		Result res = Result.success(userList);
 		return res;
 	}
-	@ApiOperation(value="插入 resources Table 接口信息", notes="")
+	@ApiOperation(value="添加用户", notes="")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "主键标识", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "members", value = "members Table 映射对象", required = true, dataType = "String")
+            @ApiImplicitParam(name="username", value="用户名", required = true, dataType="String"),
+            @ApiImplicitParam(name="nickname", value="姓名或昵称", required = true, dataType="String"),
+            @ApiImplicitParam(name="sort", value="排序值", required = true, dataType="int"),
+            @ApiImplicitParam(name="status", value="用户状态;1=正常;2=锁定", required = true, dataType="int")
     })
 	@ResponseBody
-	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Result insertUsers(MembersEntity mm,String userId) {
-		
-		List<MembersEntity> insertLi = new ArrayList<>();
-		insertLi.add(mm);
-		
-		Result res = userService.insert(insertLi,userId);
+	@RequestMapping(value="", method = RequestMethod.POST)
+	public Result insertUser(HttpServletRequest request, MemberEntity member) {
+		//String operatorId = (String)request.getAttribute(RequestHeaderConstants.USER_ID);
+		Result res = userService.insert(member);
 		return res;
 	}
 	@ResponseBody
-	@RequestMapping(value = "", method = RequestMethod.DELETE)
-	public Result deleteRes(HttpServletRequest request,@QueryParam("id") String id) {
+	@RequestMapping(value="", method = RequestMethod.DELETE)
+	public Result deleteRes(HttpServletRequest request, @QueryParam("id") String id) {
 		
 		return userService.deleteById(id);
 	}
-	@ApiOperation(value="修改 members Table 用户信息", notes="")
+	@ApiOperation(value="更新用户信息", notes="")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "filter", value = "members 实体类", required = false, dataType = "MembersEntity")
+            @ApiImplicitParam(name="id", value="用户id", required = false, dataType="String"),
+            @ApiImplicitParam(name="username", value="用户名", required = true, dataType="String"),
+            @ApiImplicitParam(name="nickname", value="姓名或昵称", required = true, dataType="String"),
+            @ApiImplicitParam(name="sort", value="排序值", required = true, dataType="int"),
+            @ApiImplicitParam(name="status", value="用户状态;1=正常;2=锁定", required = true, dataType="int")
     })
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result updateRes(MembersEntity members,String userId) {
-		
-		return userService.update(members,userId);
+	public Result updateMember(MemberEntity members) {
+		return userService.update(members);
 	}
 	@ApiOperation(value="根据用户名统计用户数量", notes="用户添加时判断是否重名")
     @ApiImplicitParams({

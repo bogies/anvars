@@ -90,11 +90,12 @@ public interface RoleService {
 	public int removeResource(String roleId, String resIds);
 	/**
 	 * 添加用户到指定角色
+	 * @param operatorId 操作者的用户id
 	 * @param roleId 角色id
 	 * @param userIds 用户id列表
 	 * @return 影响的数量
 	 */
-	public int addUser(String roleId, String[] userIds);
+	public int addUser(String operatorId, String roleId, String[] userIds);
 	/**
 	 * 删除用户到指定角色
 	 * @param roleId 角色id

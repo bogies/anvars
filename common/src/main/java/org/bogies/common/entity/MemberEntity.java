@@ -1,25 +1,16 @@
 package org.bogies.common.entity;
 
-
-/**
- * @Description: TODO
- * @author: renkun
- * @date: 2018年12月13日上午9:23:58
- */
-public class MembersEntity {
+public class MemberEntity {
 	private String id;
 	private String username;
 	private String password;
-	private String confirmPwd;
 	private String nickname;
 	private String createTime;
 	private String updateTime;
-	private String sort;
-	private int status;
+	private int sort = 0;
+	private int status = 1;
 	/**密码连续错误次数*/
 	private int pwdError;
-	private int orderBy;
-	private int admin;
 	private String token;
 
 	public String getId() {
@@ -54,11 +45,11 @@ public class MembersEntity {
 		this.nickname = nickname;
 	}
 	
-	public String getSort() {
+	public int getSort() {
 		return sort;
 	}
 
-	public void setSort(String sort) {
+	public void setSort(int sort) {
 		this.sort = sort;
 	}
 
@@ -86,36 +77,12 @@ public class MembersEntity {
 		this.status = status;
 	}
 
-	public int getAdmin() {
-		return admin;
-	}
-
-	public void setAdmin(int admin) {
-		this.admin = admin;
-	}
-
-	public int getOrderBy() {
-		return orderBy;
-	}
-
-	public void setOrderBy(int orderBy) {
-		this.orderBy = orderBy;
-	}
-
 	public int getPwdError() {
 		return pwdError;
 	}
 
 	public void setPwdError(int pwdError) {
 		this.pwdError = pwdError;
-	}
-
-	public String getConfirmPwd() {
-		return confirmPwd;
-	}
-
-	public void setConfirmPwd(String confirmPwd) {
-		this.confirmPwd = confirmPwd;
 	}
 
 	public String getToken() {

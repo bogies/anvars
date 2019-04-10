@@ -1,9 +1,11 @@
 package org.bogies.rbacs.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.QueryParam;
 
 import org.bogies.common.constants.ErrorConstants;
+import org.bogies.common.constants.RequestHeaderConstants;
 import org.bogies.common.entity.Result;
 import org.bogies.rbacs.model.RoleModel;
 import org.bogies.rbacs.service.RoleService;
@@ -274,7 +276,9 @@ public class RoleController {
     })
 	@ResponseBody
 	@RequestMapping(value = "/members", method=RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-	public Result addUsers(HttpSession session, String roleId, String userIds) {
+	public Result addUsers(HttpServletRequest request, String roleId, String userIds) {
+		String operatorId = (String)request.getAttribute(RequestHeaderConstants.USER_ID);
+		
 		Result rlt = null;
 		if (StringUtils.isBlank(roleId)) {
 			rlt = Result.fail(ErrorConstants.SE_REQ_PARAMS.getCode(), "角色id不能为空");
@@ -285,7 +289,7 @@ public class RoleController {
 			userList = userIds.split(",");
 		}
 		
-		int count = roleService.addUser(roleId, userList);
+		int count = roleService.addUser(operatorId, roleId, userList);
 		if (count > 0) {
 			rlt = Result.success();
 		} else {

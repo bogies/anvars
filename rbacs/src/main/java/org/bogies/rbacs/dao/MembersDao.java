@@ -2,7 +2,7 @@ package org.bogies.rbacs.dao;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
-import org.bogies.common.entity.MembersEntity;
+import org.bogies.common.entity.MemberEntity;
 import org.bogies.rbacs.model.RoleModel;
 
 /**
@@ -17,13 +17,13 @@ public interface MembersDao {
 	 * @param filter
 	 * @return：List<MembersEntity>
 	 */
-	public List<MembersEntity> getUsers(@Param("filter") MembersEntity filter);
+	public List<MemberEntity> getUsers(@Param("filter") MemberEntity filter);
 	/**
 	 * 添加用户
 	 * @param loginUser
 	 * @return：int
 	 */
-	public int insert(List<MembersEntity> members);
+	public int insert(MemberEntity member);
 	/**
 	 * 删除用户
 	 * @param id
@@ -46,13 +46,13 @@ public interface MembersDao {
 	 * @param id
 	 * @return：UserModel
 	 */
-	public MembersEntity getById(@Param("id") String id);
+	public MemberEntity getById(@Param("id") String id);
 	/**
 	 * TODO
 	 * @param username
 	 * @return：UserModel
 	 */
-	public MembersEntity getByUsername(@Param("username") String username);
+	public MemberEntity getByUsername(@Param("username") String username);
 	/**
 	 * 根据用户名统计用户数量
 	 * @param username
@@ -70,7 +70,7 @@ public interface MembersDao {
 	 * @param loginUser
 	 * @return：int
 	 */
-	public int updateByUsername(@Param("members") MembersEntity members);
+	public int updateByUsername(@Param("members") MemberEntity members);
 	/**
 	 * 删除用户所有的角色
 	 * @param userId

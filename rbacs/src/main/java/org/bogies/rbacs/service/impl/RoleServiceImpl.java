@@ -10,7 +10,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 import org.bogies.common.constants.RoleConstants;
-import org.bogies.common.entity.MembersEntity;
+import org.bogies.common.entity.MemberEntity;
 import org.bogies.rbacs.dao.RoleDao;
 import org.bogies.rbacs.model.ResourcesModel;
 import org.bogies.rbacs.model.RoleModel;
@@ -94,7 +94,7 @@ public class RoleServiceImpl implements RoleService {
 		return roleDao.delete(id);
 	}
 	@Override
-	public PageInfo<MembersEntity> getMembers(String roleId, int page, int pageSize) {
+	public PageInfo<MemberEntity> getMembers(String roleId, int page, int pageSize) {
 		if (page < 1) {
 			page = 1;
 		}
@@ -102,10 +102,10 @@ public class RoleServiceImpl implements RoleService {
 			pageSize = 10;
 		}
 		PageHelper.startPage(page, pageSize);
-		PageInfo<MembersEntity> userListPage = null;
-		List<MembersEntity> userList = roleDao.getMembers(roleId);
+		PageInfo<MemberEntity> userListPage = null;
+		List<MemberEntity> userList = roleDao.getMembers(roleId);
 		if (null != userList) {
-			userListPage = new PageInfo<MembersEntity>(userList);
+			userListPage = new PageInfo<MemberEntity>(userList);
 		}
 		
 		return userListPage;
@@ -119,11 +119,11 @@ public class RoleServiceImpl implements RoleService {
 			pageSize = 10;
 		}
 		PageHelper.startPage(page, pageSize);
-		PageInfo<MembersEntity> userListPage = null;
-		List<MembersEntity> userList = roleDao.getUnauthMembers(roleId);
+		PageInfo<MemberEntity> userListPage = null;
+		List<MemberEntity> userList = roleDao.getUnauthMembers(roleId);
 
 		if (null != userList) {
-			userListPage = new PageInfo<MembersEntity>(userList);
+			userListPage = new PageInfo<MemberEntity>(userList);
 		}
 		
 		return userListPage;
@@ -171,11 +171,13 @@ public class RoleServiceImpl implements RoleService {
 		return roleDao.removeResource(roleId, resIds);
 	}
 	@Override
-	public int addUser(String roleId, String[] userIds) {
+	public int addUser(String operatorId, String roleId, String[] userIds) {
+		// 操作用户是管理员或相同角色, 可添加用户当指定角色
 		return roleDao.addUsers(roleId, userIds);
 	}
 	@Override
 	public int removeUser(String roleId, String userIds) {
+		// 加事务, 删除后如果为 管理员 且用户数为0则退回并提示错误
 		return roleDao.removeUsers(roleId, userIds);
 	}
 }

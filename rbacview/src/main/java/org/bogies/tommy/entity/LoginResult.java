@@ -1,11 +1,11 @@
 package org.bogies.tommy.entity;
 
-import org.bogies.common.entity.MembersEntity;
+import org.bogies.common.entity.MemberEntity;
 
 public class LoginResult {
 	private int code = 0;
 	private String message = "";
-	private MembersEntity data = null;
+	private MemberEntity data = null;
 	public int getCode() {
 		return code;
 	}
@@ -18,10 +18,10 @@ public class LoginResult {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	public MembersEntity getData() {
+	public MemberEntity getData() {
 		return data;
 	}
-	public void setData(MembersEntity data) {
+	public void setData(MemberEntity data) {
 		this.data = data;
 	}
 }

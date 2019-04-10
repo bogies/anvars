@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
 import org.bogies.common.constants.ErrorConstants;
 import org.bogies.common.constants.RequestHeaderConstants;
 import org.bogies.common.entity.CustomRequestEntity;
-import org.bogies.common.entity.MembersEntity;
+import org.bogies.common.entity.MemberEntity;
 import org.bogies.common.entity.Result;
 import org.bogies.common.utils.SystemUtils;
 import org.bogies.tommy.AppConfig;
@@ -38,7 +38,7 @@ public class ServicesController {
 	 */
 	@RequestMapping(value = "/auth.jsd", produces = "text/plain;charset=UTF-8")
 	public ResponseEntity<HttpStatus> auth(HttpServletRequest request, HttpSession session) {
-		MembersEntity memberInfo = (MembersEntity)session.getAttribute(SessionParam.LOGIN_USER);
+		MemberEntity memberInfo = (MemberEntity)session.getAttribute(SessionParam.LOGIN_USER);
 		ResponseEntity<HttpStatus> res;
 		if (null != memberInfo) {
 			res = new ResponseEntity<HttpStatus>(HttpStatus.OK);
@@ -67,7 +67,7 @@ public class ServicesController {
 		customReq.setRequestUri(request.getHeader(RequestHeaderConstants.REQUEST_URI));
 		customReq.setRequestMethod(request.getHeader(RequestHeaderConstants.REQUEST_METHOD));
 		customReq.setRequestParams(params);
-		MembersEntity memberInfo = (MembersEntity)session.getAttribute(SessionParam.LOGIN_USER);
+		MemberEntity memberInfo = (MemberEntity)session.getAttribute(SessionParam.LOGIN_USER);
 		if (null != memberInfo) {
 			customReq.setUserId(memberInfo.getId());
 			customReq.setUsername(memberInfo.getUsername());
@@ -88,7 +88,7 @@ public class ServicesController {
 			return JSON.toJSONString(Result.success(ErrorConstants.SE_REQ_PARAMS));
 		}
 		
-		MembersEntity user = (MembersEntity)session.getAttribute(SessionParam.LOGIN_USER);
+		MemberEntity user = (MemberEntity)session.getAttribute(SessionParam.LOGIN_USER);
 		if (null != user) {
 			return JSON.toJSONString(Result.success(user));
 		}

@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.bogies.common.entity.CustomRequestEntity;
-import org.bogies.common.entity.MembersEntity;
+import org.bogies.common.entity.MemberEntity;
 import org.bogies.common.utils.SystemUtils;
 import org.bogies.tommy.AppConfig;
 import org.bogies.tommy.session.SessionParam;
@@ -34,7 +34,7 @@ public class ViewController {
 			return HOME_URI;
 		}
 		
-		MembersEntity userInfo = (MembersEntity)request.getSession().getAttribute(SessionParam.LOGIN_USER);
+		MemberEntity userInfo = (MemberEntity)request.getSession().getAttribute(SessionParam.LOGIN_USER);
 		if (!AppConfig.instance().getConfig().isPermitAllUrl(page)) {
 			String clientIp = SystemUtils.getClientIp(request.getHeader("X-Real-IP"), 
 					request.getHeader("X-Forwarded-For"), 
@@ -81,7 +81,7 @@ public class ViewController {
 			/// 这里应该返回404错误页面
 			return NOT_FOUND;
 		}
-		MembersEntity userInfo = (MembersEntity)request.getSession().getAttribute(SessionParam.LOGIN_USER);
+		MemberEntity userInfo = (MemberEntity)request.getSession().getAttribute(SessionParam.LOGIN_USER);
 		
 		m.addAttribute("webConfig", AppConfig.instance().getWebConfig());
 		m.addAttribute("userInfo", userInfo);
@@ -91,7 +91,7 @@ public class ViewController {
 	@RequestMapping(value = "/login.html", method = RequestMethod.GET)
 	public String login(Model m, HttpServletRequest request, HttpSession session, 
 			HttpServletResponse response, String returnUrl) {
-		MembersEntity user = (MembersEntity)session.getAttribute(SessionParam.LOGIN_USER);
+		MemberEntity user = (MemberEntity)session.getAttribute(SessionParam.LOGIN_USER);
 		m.addAttribute("webConfig", AppConfig.instance().getWebConfig());
 		if (StringUtils.isEmpty(returnUrl)) {
 			returnUrl = request.getHeader("cookie");

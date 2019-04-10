@@ -8,7 +8,7 @@ import org.bogies.rbacs.dao.RoleUsersDao;
 import org.bogies.rbacs.model.RoleModel;
 import org.bogies.rbacs.service.MembersService;
 import org.bogies.common.constants.ErrorConstants;
-import org.bogies.common.entity.MembersEntity;
+import org.bogies.common.entity.MemberEntity;
 import org.bogies.common.entity.Result;
 import org.bogies.common.utils.EncryptUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -33,8 +33,8 @@ public class MembersServiceImpl implements MembersService {
 	private RoleUsersDao roleDao;
 
 	@Override
-	public MembersEntity login(String username, String password) {
-		MembersEntity user = this.getByUsername(username);
+	public MemberEntity login(String username, String password) {
+		MemberEntity user = this.getByUsername(username);
 		String hashPwd = this.makePassword(username, password);
 		
 		if (hashPwd.equals(user.getPassword())) {
@@ -46,7 +46,7 @@ public class MembersServiceImpl implements MembersService {
 		return user;
 	}
 	@Override
-	public PageInfo<MembersEntity> getUsers(MembersEntity filter,int page, int pageSize) {
+	public PageInfo<MemberEntity> getUsers(MemberEntity filter,int page, int pageSize) {
 		
 		if (page < 1) {
 			page = 1;
@@ -55,31 +55,50 @@ public class MembersServiceImpl implements MembersService {
 			pageSize = 10;
 		}
 		PageHelper.startPage(page, pageSize);
-		PageInfo<MembersEntity> pageInfo = null;
-		List<MembersEntity> resourcesRecord = membersDao.getUsers(filter);
+		PageInfo<MemberEntity> pageInfo = null;
+		List<MemberEntity> resourcesRecord = membersDao.getUsers(filter);
 		if (null != resourcesRecord) {
-			pageInfo = new PageInfo<MembersEntity>(resourcesRecord);
+			pageInfo = new PageInfo<MemberEntity>(resourcesRecord);
 		}
 		return pageInfo;
 	}
-	@Override
-	public Result insert(List<MembersEntity> insertLi,String userId) {
-		
-		insertLi.forEach(args->{
-			args.setId(UUID.randomUUID().toString());
-		});
-		for (MembersEntity rm : insertLi) {
-			if(rm.getPassword()!=null && !rm.getPassword().equals("")) {
-				String passwordMD5 = makePassword(rm.getUsername(), rm.getPassword());
-				rm.setPassword(passwordMD5);
-			}
-			if(membersDao.getById(userId).getAdmin() < rm.getAdmin()) {
-				return Result.fail(ErrorConstants.SE_REQ_PARAMS.getCode(), "普通用户不能添加管理员账号");
-			}else if(membersDao.existByUsername(rm.getUsername())!=0) {
-				return Result.fail(ErrorConstants.SE_REQ_PARAMS.getCode(), "用户名重复");
-			}
+	public boolean checkMemberRequired(MemberEntity member) {
+		if (StringUtils.isBlank(member.getId())) {
+			return false;
 		}
-		int res = membersDao.insert(insertLi);
+		
+		if (StringUtils.isBlank(member.getUsername())) {
+			return false;
+		}
+		
+		if (StringUtils.isBlank(member.getNickname())) {
+			return false;
+		}
+		
+		if (StringUtils.isBlank(member.getPassword())) {
+			return false;
+		}
+		
+		return true;
+	}
+	@Override
+	public Result insert(MemberEntity member) {
+		if(StringUtils.isBlank(member.getPassword())) {
+			return Result.fail(ErrorConstants.SE_REQ_PARAMS.getCode(), "密码不能为空");
+		}
+		member.setId(UUID.randomUUID().toString());
+		if (!checkMemberRequired(member)) {
+			return Result.fail(ErrorConstants.SE_REQ_PARAMS.getCode(), "用户信息不完整");
+		}
+
+		/// 加密明文密码
+		String passwordMD5 = makePassword(member.getUsername(), member.getPassword());
+		member.setPassword(passwordMD5);
+		
+		if(membersDao.existByUsername(member.getUsername())!=0) {
+			return Result.fail(ErrorConstants.SE_REQ_PARAMS.getCode(), "用户名重复");
+		}
+		int res = membersDao.insert(member);
 		return Result.success(res);
 	}
 	@Override
@@ -98,23 +117,15 @@ public class MembersServiceImpl implements MembersService {
 		return rlt;
 	}
 	@Override
-	public Result update(MembersEntity members, String userId) {
-		
-		if(members.getPassword()!=null && !members.getPassword().equals("")) {
-			String passwordMD5 = makePassword(members.getUsername(), members.getPassword());
-			members.setPassword(passwordMD5);
-		}
-		if(membersDao.getById(userId).getAdmin() < members.getAdmin()) {
-			return Result.fail(ErrorConstants.SE_REQ_PARAMS.getCode(), "普通用户不能添加管理员账号");
-		}
-		return Result.success(membersDao.updateByUsername(members));
+	public Result update(MemberEntity member) {
+		return Result.success(membersDao.updateByUsername(member));
 	}
 	@Override
-	public MembersEntity getById(String id) {
+	public MemberEntity getById(String id) {
 		return membersDao.getById(id);
 	}
 	@Override
-	public MembersEntity getByUsername(String username) {
+	public MemberEntity getByUsername(String username) {
 		return membersDao.getByUsername(username);
 	}
 
@@ -129,7 +140,7 @@ public class MembersServiceImpl implements MembersService {
 	}
 
 	@Override
-	public int updateUserInfo(MembersEntity user) {
+	public int updateUserInfo(MemberEntity user) {
 		return 0;
 	}
 
