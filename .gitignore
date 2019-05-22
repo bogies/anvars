@@ -16,3 +16,6 @@ target/
 #other
 log/
 logs/
+
+#springboot yml
+application.yml
