@@ -11,31 +11,3 @@ spring:
   profiles: dev
   application:
     name: rbacs
-  cloud:
-    consul:
-      discovery:
-        preferIpAddress: true
-        enabled: true
-        register: true
-        service-name: rbac-service
-        health-check-interval: 10s
-        health-check-timeout: 20s
-        heartbeat:
-          enabled: true
-        ip-address: ${server.IP}
-        port: ${SERVER_PORT:${server.port}}
-        lifecycle:
-          enabled: true
-        scheme: http
-        prefer-agent-address: false
-        register-health-check: true
-        tags: master
-        query-passing: true
-      retry:
-        initial-interval: 1000
-        max-attempts: 4
-        max-interval: 1000
-      host: localhost
-      port: 8500
-      servicesUrl: http://${spring.cloud.consul.host}:${spring.cloud.consul.port}/v1/agent/services
-  
