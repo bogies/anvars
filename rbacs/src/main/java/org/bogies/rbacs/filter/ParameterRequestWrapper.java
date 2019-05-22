@@ -3,7 +3,7 @@ package org.bogies.rbacs.filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

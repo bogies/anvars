@@ -9,10 +9,13 @@
 <![endif]-->
 <script>window.URI_DOMAIN = "${pageContext.request.contextPath}"</script>
 <script>
-    window.sessionUserInfo = {id:"${userInfo.id}",
-    username:"${userInfo.username}",
-    nickname:"${userInfo.nickname}",
-    admin:"${userInfo.admin}"}
+    window.sessionUserInfo = {
+        id:"${userInfo.id}",
+        nickname:"${userInfo.xm}"
+    };
+    window.SERVICE = {
+        RBACS: '/rbacs'
+    };
 </script>
 
 <script src="${pageContext.request.contextPath}/webkits/layui/layui.all.js"></script>
@@ -20,7 +23,7 @@
 <script src="${pageContext.request.contextPath}/webkits/jquery/jquery.form.min.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/vue/vue.min.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/vue/vue-router.min.js"></script>
-<script src="${pageContext.request.contextPath}/webkits/vue/bogies-component.min.js"></script>
+<script src="${pageContext.request.contextPath}/webkits/vue/vue-bogies.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/moment-with-locales.min.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/promise-6.1.0.min.js"></script>
 <script src="${pageContext.request.contextPath}/webkits/bluebird.core.min.js"></script>

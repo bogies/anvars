@@ -1,4 +1,4 @@
-package org.bogies.rbacs.dao;
+package org.bogies.rbacs.dao.rbac;
 
 import org.apache.ibatis.annotations.Param;
 

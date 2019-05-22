@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.bogies.rbacs.dao.rbac.RoleDao">
+	<resultMap type="org.bogies.rbacs.entity.RoleEntity" id="roleInfo">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="description" column="description"/>
+		<result property="reserved" column="is_reserved"/>
+		<result property="serviceName" column="service_name"/>
+	</resultMap>
+	<resultMap type="org.bogies.common.entity.MemberEntity" id="memberBaseInfo">
+		<id property="id" column="sfzhm"/>
+		<result property="xm" column="xm"/>
+		<result property="dwmc" column="dwmc"/>
+		<result property="bmbm" column="bmbm"/>
+		<result property="cjBmmc" column="cj_bmmc"/>
+		<result property="kjBmmc" column="kj_bmmc"/>
+	</resultMap>
+	
+	<select id="getById" resultMap="roleInfo">
+		SELECT id,name,description,is_reserved,create_time FROM roles WHERE id=#{id}
+	</select>
+	<select id="getRoles" resultMap="roleInfo" parameterType="org.bogies.rbacs.entity.RoleEntity">
+		SELECT id,name,description,service_name,is_reserved FROM roles 
+		<where>
+			<if test="name!=null and name!=''">
+				and name like '%${name}%'
+			</if>
+			<if test="reserved!=null and reserved!=''">
+				and reserved=#{reserved}
+			</if>
+			<if test="serviceName!=null and serviceName!=''">
+				and service_name like '%${serviceName}%'
+			</if>
+		</where>
+	</select>
+	<insert id="add" parameterType="org.bogies.rbacs.entity.RoleEntity">
+		INSERT INTO roles
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			id,name,service_name,
+			<if test="reserved==1" >
+				is_reserved,
+			</if>
+			<if test="description != null" >
+				description,
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			#{id},#{name},#{serviceName},
+			<if test="reserved==1" >
+				#{reserved},
+			</if>
+			<if test="description != null" >
+				#{description},
+			</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="org.bogies.rbacs.entity.RoleEntity">
+		update roles
+		<set>
+			<if test="name != null and name != ''" >
+				name=#{name},
+			</if>
+			<if test="serviceName != null and serviceName != ''" >
+				service_name=#{serviceName},
+			</if>
+			<if test="description != null and description != ''" >
+				description=#{description},
+			</if>
+			<if test="reserved==0 or reserved==1" >
+				is_reserved=#{reserved},
+			</if>
+		</set>
+		where id=#{id} and is_reserved=0
+	</update>
+	<delete id="delete">
+		DELETE FROM roles WHERE id=#{id} and is_reserved=0
+	</delete>
+	<insert id="addUsers">
+		insert ignore into role_users
+		(role_id,user_id,service_name)
+		VALUES
+		<foreach collection="userIds" item="userId" index="index" separator=",">
+			(#{roleId},#{userId},#{serviceName})
+		</foreach>
+	</insert>
+	<delete id="removeUsers">
+		DELETE FROM role_users WHERE role_id=#{roleId}
+		<if test="userIds!=null and userIds!=''">
+			and user_id in (${userIds})
+		</if>
+	</delete>
+	<insert id="addResource">
+		insert ignore into role_resources
+		(role_id,resource_id,service_name)
+		VALUES
+		<foreach collection="resIds" item="resId" index="index" separator=",">
+			(#{roleId},#{resId},#{serviceName})
+		</foreach>
+	</insert>
+	<delete id="removeResource">
+		DELETE FROM role_resources WHERE role_id=#{roleId}
+		<if test="resIds!=null and resIds!=''">
+			and resource_id in (${resIds})
+		</if>
+	</delete>
+	<select id="getMemberIds" resultType="java.lang.String">
+		select user_id from role_users
+		where role_id=#{roleId}
+	</select>
+	<!-- 获取角色已授权的资源 -->
+	<select id="getRes" resultMap="org.bogies.rbacs.dao.rbac.ResourcesDao.resourcesInfo">
+		select r.id,r.type,r.path,r.req_method,r.summary,r.service_name from role_resources rr 
+		left join resources r on r.id=rr.resource_id
+		where rr.role_id=#{roleId}
+	</select>
+	<!-- 获取角色未授权的资源 -->
+	<select id="getUnauthRes" resultMap="org.bogies.rbacs.dao.rbac.ResourcesDao.resourcesInfo">
+		select r.id,r.type,r.path,r.req_method,r.summary,r.service_name from resources r 
+		where (select count(1) as num from role_resources rr 
+		where rr.role_id=#{roleId} and rr.resource_id=r.id)=0
+	</select>
+	<select id="getRolesByUserId" resultMap="roleInfo">
+		select r.id,r.name from roles r 
+		left join role_users ru on r.id=ru.role_id
+		where ru.user_id=#{userId}
+		<if test="null!=serviceName and ''!=serviceName">
+			and ru.service_name=#{serviceName}
+		</if>
+	</select>
+	<delete id="clearUserRoles">
+		DELETE FROM role_users WHERE user_id=#{userId} and service_name=#{serviceName}
+	</delete>
+</mapper>

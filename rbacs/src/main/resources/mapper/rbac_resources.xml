@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.bogies.rbacs.dao.rbac.ResourcesDao">
+	<resultMap type="org.bogies.rbacs.entity.ResourceEntity" id="resourcesInfo">
+		<id property="id" column="id"/>
+		<result property="type" column="type"/>
+		<result property="path" column="path"/>
+		<result property="reqMethod" column="req_method"/>
+		<result property="summary" column="summary"/>
+		<result property="pageName" column="page_name"/>
+		<result property="serviceName" column="service_name"/>
+		<result property="description" column="description"/>
+		<result property="extJson" column="ext_json"/>
+	</resultMap>
+	
+	<select id="getResources" resultMap="resourcesInfo" parameterType="org.bogies.rbacs.entity.ResourceEntity">
+		SELECT id,type,path,req_method,summary,page_name,service_name,description,ext_json FROM resources res
+		<where>
+			<if test='type!="" and type!=null'> and type=#{type} </if>
+			<if test='path!="" and path!=null'> and path LIKE '%${path}%' </if>
+			<if test='reqMethod!="" and reqMethod!=null'> and req_method=#{reqMethod} </if>
+			<if test='summary!="" and summary!=null'> and summary LIKE '%${summary}%' </if>
+			<if test='serviceName!="" and serviceName!=null'> and service_name=#{servicesName} </if>
+		</where>
+		ORDER BY res.service_name,res.path
+	</select>
+	<select id="getResourcesByUserId" resultMap="resourcesInfo">
+		select res.id,res.ext_json from role_users ru 
+		left join role_resources rr on ru.role_id=rr.role_id
+		left join resources res on rr.resource_id=res.id
+		where ru.user_id=#{userId}
+		<if test='filter.type!="" and filter.type!=null'> and type=#{filter.type} </if>
+		<if test='filter.path!="" and filter.path!=null'> and path=#{filter.path} </if>
+		<if test='filter.reqMethod!="" and filter.reqMethod!=null'> and req_method=#{filter.reqMethod} </if>
+		<if test='filter.serviceName!="" and filter.serviceName!=null'> and res.service_name=#{filter.serviceName} </if>
+	</select>
+	<select id="checkPermitByUserId" resultType="java.lang.Integer">
+        select count(*) from role_resources rr left join role_users ur ON
+        rr.role_id=ur.role_id 
+        where (rr.resource_id=#{resId}and ur.user_id=#{userId}) 
+        or (rr.resource_id=#{resId} and rr.role_id=#{anonymousId})
+	</select>
+	<select id="checkPermitByRoleId" resultType="java.lang.Integer">
+       select count(*) from role_resources rr
+        where rr.resource_id=#{resId} 
+        and (rr.role_id=#{roleId} or rr.role_id=#{anonymousId})
+    </select>
+
+	<insert id="insert" parameterType="org.bogies.rbacs.entity.ResourceEntity">
+      	INSERT INTO resources 
+      	<trim prefix="(" suffix=")" suffixOverrides="," >
+			id,type,service_name,
+			<if test="path != null" >
+				path,
+			</if>
+			<if test="reqMethod != null" >
+				req_method,
+			</if>
+			<if test="summary != null" >
+				summary,
+			</if>
+			<if test="pageName != null" >
+				page_name,
+			</if>
+			<if test="null != description">
+				description,
+			</if>
+			<if test="null != extJson">
+				ext_json,
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			#{id},#{type},#{serviceName},
+			<if test="path != null" >
+				#{path},
+			</if>
+			<if test="reqMethod != null" >
+				#{reqMethod},
+			</if>
+			<if test="summary != null" >
+				#{summary},
+			</if>
+			<if test="pageName != null" >
+				#{pageName},
+			</if>
+			<if test="null != description">
+				#{description},
+			</if>
+			<if test="null != extJson">
+				#{extJson},
+			</if>
+		</trim>
+    </insert>
+     <update id="update" parameterType="org.bogies.rbacs.entity.ResourceEntity">
+    	UPDATE resources
+    	<set>
+			<if test="type != null and type != ''" >
+				type=#{type},
+			</if>
+			<if test="summary != null" >
+				summary = #{summary},
+			</if>
+			<if test="path != null" >
+				path=#{path},
+			</if>
+			<if test="serviceName != null" >
+				service_name = #{serviceName},
+			</if>
+			<if test="pageName != null" >
+				page_name = #{pageName},
+			</if>
+			<if test="description != null" >
+				description = #{description},
+			</if>
+			<if test="extJson != null" >
+				ext_json=#{extJson}
+			</if>
+		</set> 
+       	WHERE id = #{id}
+    </update>
+    <delete id="delete">
+		DELETE FROM resources WHERE id=#{id}
+	</delete>
+  	<!-- Using path, req_method to determine whether a record exists -->
+	<select id="existById" resultType="java.lang.Integer">
+		SELECT count(*) FROM resources WHERE id=#{id};
+	</select>
+	<select id="getInRoles" resultMap="org.bogies.rbacs.dao.rbac.RoleDao.roleInfo">
+        SELECT r.id,r.name FROM role_resources rr 
+        left join roles r on rr.role_id=r.id 
+        where rr.resource_id=#{resId} and rr.service_name=#{serviceName}
+    </select>
+</mapper>

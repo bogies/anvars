@@ -37,14 +37,18 @@ var rolesTpl = {
                 isAdmin: 0,
                 status: '1',
             },
-            // 当前操作的角色id
-            curRoleId: ''
+            // 当前操作的角色信息
+            curRoleInfo: null
         };
     },
     methods: {
         getRoleList: function (page) {
             var self = this;
-            Tmsp('/rbacs/role?page=' + page + '&pageSize=10&name=' + this.roleWhere.roleName, 'get').then(function (result) {
+            var p = new tmspParams();
+            p.setService(SERVICE.RBACS);
+            p.setUrl('/role?page=' + page + '&pageSize=10&name=' + this.roleWhere.roleName);
+            p.setLoading({el: $("body")});
+            Tmsp(p).then(function (result) {
                 console.log(result);
                 self.rolePageData = result.data;
             }, function (error) {
@@ -87,7 +91,13 @@ var rolesTpl = {
                         return false;
                     }
 
-                    Tmsp('/rbacs/role', tmspMethod, this.editRoleInfo).then(function (result) {
+                    var p = new tmspParams();
+                    p.setService(SERVICE.RBACS);
+                    p.setUrl('/role');
+                    p.setMethod(tmspMethod);
+                    p.setData(self.editRoleInfo);
+                    p.setLoading({el: $("body")});
+                    Tmsp(p).then(function (result) {
                         if (result.code == 200) {
                             if (roleInfo) {
                                 roleInfo.name = self.editRoleInfo.name;
@@ -125,7 +135,12 @@ var rolesTpl = {
                     btn: ["确定", "取消"] //按钮
                 },
                 function () {
-                    Tmsp('/rbacs/role?id=' + resId, 'delete').then(function (result) {
+                    var p = new tmspParams();
+                    p.setService(SERVICE.RBACS);
+                    p.setUrl('/role?id=' + resId);
+                    p.setMethod('DELETE');
+                    p.setLoading({el: $("body")});
+                    Tmsp(p).then(function (result) {
                         if (result.code == 200) {
                             layer.msg("删除成功", {
                                 icon: 1,
@@ -147,8 +162,8 @@ var rolesTpl = {
             );
         },
         // 角色用户编辑
-        editRoleMembers: function (roleId) {
-            this.curRoleId = roleId;
+        editRoleMembers: function (roleInfo) {
+            this.curRoleInfo = roleInfo;
             this.getUserByRoleId(1);
             this.getUnauthUserByRoleId(1);
 
@@ -167,50 +182,40 @@ var rolesTpl = {
             });
         },
         getUserByRoleId: function (page) {
-            Tmsp('/rbacs/role/members?page=' + page + '&pageSize=10&roleId=' + this.curRoleId, 'get').then(function (rlt) {
-                roleUsers = rlt.data;
-
+            var self = this;
+            var p = new tmspParams();
+            p.setService(SERVICE.RBACS);
+            p.setUrl('/role/members?page=' + page + '&pageSize=10&roleId=' + this.curRoleInfo.id);
+            Tmsp(p).then(function (rlt) {
+                self.roleUsers = rlt.data;
             }, function (reason) {
                 console.log(reason);
             });
-        },
-        // 角色中的用户选中状态变更
-        updateRoleUser: function ($event, userId) {
-            var userIndex = ListUtils.getIndex(this.roleUsers.list, 'id', userId);
-            if (-1 == userIndex) {
-                return;
-            }
-            var checkbox = $event.target;
-            this.roleUsers.list[userIndex].checked = checkbox.checked;
         },
         // 角色未设置的用户列表
         getUnauthUserByRoleId: function (page) {
             var self = this;
-            Tmsp('/rbacs/role/unauth/members?page=' + page + '&pageSize=10&roleId=' + this.curRoleId, 'get').then(function (rlt) {
+            var p = new tmspParams();
+            p.setService(SERVICE.RBACS);
+            p.setUrl('/role/unauth/members?page=' + page + '&pageSize=10&roleId=' + this.curRoleInfo.id);
+            p.setLoading({el: $("body")});
+            Tmsp(p).then(function (rlt) {
                 self.unauthRoleUsers = rlt.data;
-
+                console.log(rlt.data);
             }, function (reason) {
                 console.log(reason);
             });
-        },
-        // 未设置的用户选中状态变更
-        updateSrcUser: function ($event, userId) {
-            var userIndex = ListUtils.getIndex(this.unauthRoleUsers.list, 'id', userId);
-            if (-1 == userIndex) {
-                return;
-            }
-            var checkbox = $event.target;
-            this.unauthRoleUsers.list[userIndex].checked = checkbox.checked;
         },
         /// 修改角色中的用户
         updateRoleUsers: function (isAdd) {
             var updateParam = {
                 userIds: '',
-                roleId: this.curRoleId
+                roleId: this.curRoleInfo.id, 
+                serviceName: this.curRoleInfo.serviceName
             };
             var userList;
             var method = '';
-            var url = '/rbacs/role/role';
+            var url = '/role/member';
             if (isAdd) {
                 method = 'post';
                 userList = this.unauthRoleUsers.list;
@@ -235,11 +240,17 @@ var rolesTpl = {
                     updateParam = null;
                 }
                 var self = this;
-                Tmsp(url, method, updateParam).then(function (rlt) {
+                var p = new tmspParams();
+                p.setService(SERVICE.RBACS);
+                p.setUrl(url);
+                p.setMethod(method);
+                p.setData(updateParam);
+                p.setLoading({el: $("body")});    
+                Tmsp(p).then(function (rlt) {
                     self.getUnauthUserByRoleId(self.unauthRoleUsers.pageNum);
                     self.getUserByRoleId(self.roleUsers.pageNum);
                 }, function (reason) {
-                    layer.msg(reason, {
+                    layer.msg(reason.message, {
                         icon: 2,
                         time: 1000
                     });
@@ -248,8 +259,8 @@ var rolesTpl = {
         },
         /////////// 资源相关 ///////////
         /// 角色资源编辑
-        editRoleRes: function (roleId) {
-            this.curRoleId = roleId;
+        editRoleRes: function (roleInfo) {
+            this.curRoleInfo = roleInfo;
             this.getResByRoleId(1);
             this.getUnauthResByRoleId(1);
 
@@ -266,48 +277,40 @@ var rolesTpl = {
         // 角色的资源列表
         getResByRoleId: function (page) {
             var self = this;
-            Tmsp('/rbacs/role/resources?page=' + page + '&pageSize=10&roleId=' + this.curRoleId, 'get').then(function (rlt) {
+            var p = new tmspParams();
+            p.setService(SERVICE.RBACS);
+            p.setUrl('/role/resources?page=' + page + '&pageSize=10&roleId=' + this.curRoleInfo.id);
+            Tmsp(p).then(function (rlt) {
                 self.roleRes = rlt.data;
+                console.log(rlt.data);
             }, function (reason) {
                 console.log(reason);
             });
-        },
-        // 角色中的资源选中状态变更
-        updateAuthRes: function ($event, userId) {
-            var resIndex = ListUtils.getIndex(this.roleRes.list, 'id', userId);
-            if (-1 == resIndex) {
-                return;
-            }
-            var checkbox = $event.target;
-            this.roleRes.list[resIndex].checked = checkbox.checked;
         },
         // 角色未设置的资源列表
         getUnauthResByRoleId: function (page) {
             var self = this;
-            Tmsp('/rbacs/role/unauth/resources?page=' + page + '&pageSize=10&roleId=' + this.curRoleId, 'get').then(function (rlt) {
+            var p = new tmspParams();
+            p.setService(SERVICE.RBACS);
+            p.setUrl('/role/unauth/resources?page=' + page + '&pageSize=10&roleId=' + this.curRoleInfo.id);
+            p.setLoading({el: $("#roleResDlg")});
+            Tmsp(p).then(function (rlt) {
                 self.unauthRoleRes = rlt.data;
+                console.log(rlt.data);
             }, function (reason) {
-                console.log(reason);
+                console.log(reason.message);
             });
-        },
-        // 未设置的资源选中状态变更
-        updateUnauthRes: function ($event, userId) {
-            var resIndex = ListUtils.getIndex(this.unauthRoleRes.list, 'id', userId);
-            if (-1 == resIndex) {
-                return;
-            }
-            var checkbox = $event.target;
-            this.unauthRoleRes.list[resIndex].checked = checkbox.checked;
         },
         /// 修改角色中的资源
         updateRoleRes: function (isAdd) {
             var updateParam = {
                 resIds: '',
-                roleId: this.curRoleId
+                roleId: this.curRoleInfo.id, 
+                serviceName: this.curRoleInfo.serviceName
             };
             var userList;
             var method = '';
-            var url = '/rbacs/role/resources';
+            var url = '/role/resources';
             if (isAdd) {
                 method = 'post';
                 userList = this.unauthRoleRes.list;
@@ -332,18 +335,24 @@ var rolesTpl = {
                     updateParam = null;
                 }
                 var self = this;
-                Tmsp(url, method, updateParam).then(function (rlt) {
+                var p = new tmspParams();
+                p.setService(SERVICE.RBACS);
+                p.setUrl(url);
+                p.setMethod(method);
+                p.setData(updateParam);
+                p.setLoading({el: $("#roleResDlg")});
+                Tmsp(p).then(function (rlt) {
                     if (200 == rlt.code) {
                         self.getUnauthResByRoleId(self.unauthRoleRes.pageNum);
                         self.getResByRoleId(self.roleRes.pageNum);
                     } else {
-                        layer.msg(rlt.msg, {
+                        layer.msg(rlt.message, {
                             icon: 1,
                             time: 1000
                         });
                     }
                 }, function (reason) {
-                    layer.msg(reason, {
+                    layer.msg(reason.message, {
                         icon: 2,
                         time: 1000
                     });

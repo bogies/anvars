@@ -1,17 +1,15 @@
 package org.bogies.rbacs.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.QueryParam;
-
 import org.bogies.common.constants.ErrorConstants;
 import org.bogies.common.entity.Result;
 import org.bogies.common.utils.HttpServiceUtil;
 import org.bogies.rbacs.entity.ConsoulServices;
-import org.bogies.rbacs.model.ResourcesModel;
+import org.bogies.rbacs.entity.ResourceEntity;
 import org.bogies.rbacs.service.ConsoulService;
 import org.bogies.rbacs.service.ResourcesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.github.pagehelper.PageInfo;
-
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -30,71 +26,134 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/resources")
 /**
- * @Description: resources Table Controller
- * @author: renkun
+ * @Description: 资源管理
+ * @author: Jerry
  * @date: 2018年12月13日上午9:15:56
  */
 public class ResourcesController {
-	
 	@Autowired
 	private ResourcesService resService;
 	@Autowired
 	private ConsoulService consoulService;
-	
 	@Value("${swagger.v2ApiDocs.mapping}")
 	private String swaggerV2ApiDocsMapping;
 	
-	@ApiOperation(value="模糊查询 resources Table 接口信息，分页", notes="")
+	@ApiOperation(value="获取资源列表", notes="")
     @ApiImplicitParams({
 	    	@ApiImplicitParam(name = "page", value = "请求的页码", required = true, dataType = "int"),
 	        @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true, dataType = "int"),
-	    	@ApiImplicitParam(name = "path", value = "接口地址", required = true, dataType = "String"),
-	    	@ApiImplicitParam(name = "reqMethod", value = "请求方式", required = true, dataType = "String"),
-	    	@ApiImplicitParam(name = "summary", value = "接口概要", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "servicesName", value = "服务名", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "description", value = "接口详细说明", required = true, dataType = "String")
+	        @ApiImplicitParam(name = "type", value = "接口类型", required = false, dataType = "String"),
+	    	@ApiImplicitParam(name = "path", value = "接口地址", required = false, dataType = "String"),
+	    	@ApiImplicitParam(name = "reqMethod", value = "请求方式", required = false, dataType = "String"),
+	    	@ApiImplicitParam(name = "summary", value = "接口概要", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "servicesName", value = "服务名", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "pageName", value = "相关页面", required = false, dataType = "String")
     })
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public Result getRes(@QueryParam("page") int page, @QueryParam("pageSize") int pageSize, ResourcesModel rm) {
-		PageInfo<ResourcesModel> pageInfo = resService.getResources(page, pageSize, rm);
+	public Result getRes(@QueryParam("page") int page, @QueryParam("pageSize") int pageSize, 
+			ResourceEntity filter) {
+		PageInfo<ResourceEntity> pageInfo = resService.getResources(page, pageSize, filter);
 		return Result.success(pageInfo);
 	}
-	@ApiOperation(value="修改 resources Table 接口信息", notes="修改 resources Table 接口信息（概要和详细说明）")
+	@ApiOperation(value="获取已授权给用户的资源列表", notes="")
+    @ApiImplicitParams({
+	    	@ApiImplicitParam(name = "page", value = "请求的页码", required = true, dataType = "int"),
+	        @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true, dataType = "int"),
+	        @ApiImplicitParam(name = "userId", value = "相关页面", required = false, dataType = "String"),
+	        @ApiImplicitParam(name = "type", value = "接口类型", required = false, dataType = "String"),
+	    	@ApiImplicitParam(name = "path", value = "接口地址", required = false, dataType = "String"),
+	    	@ApiImplicitParam(name = "reqMethod", value = "请求方式", required = false, dataType = "String"),
+	    	@ApiImplicitParam(name = "summary", value = "接口概要", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "servicesName", value = "服务名", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "pageName", value = "相关页面", required = false, dataType = "String")
+    })
+	@ResponseBody
+	@RequestMapping(value = "/byuserid", method = RequestMethod.GET)
+	public Result getResByUserId(@QueryParam("page") int page, @QueryParam("pageSize") int pageSize, 
+			@QueryParam("userId") String userId, ResourceEntity filter) {
+		PageInfo<ResourceEntity> pageInfo = resService.getResourcesByUserId(page, pageSize, userId, filter);
+		return Result.success(pageInfo);
+	}
+	@ApiOperation(value="修改资源", notes="")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "主键标识", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "summary", value = "接口概要", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "description", value = "接口详细说明", required = true, dataType = "String")
+            @ApiImplicitParam(name = "type", value = "接口类型", required = false, dataType = "String"),
+	    	@ApiImplicitParam(name = "path", value = "接口地址", required = false, dataType = "String"),
+	    	@ApiImplicitParam(name = "reqMethod", value = "请求方式", required = false, dataType = "String"),
+	    	@ApiImplicitParam(name = "summary", value = "接口概要", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "servicesName", value = "服务名", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "pageName", value = "相关页面", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "description", value = "接口详细说明", required = false, dataType = "String")
     })
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result updateRes(HttpServletRequest request,@QueryParam("id") String id, @QueryParam("summary") String summary, @QueryParam("description") String description) {
-		
-		int res = resService.updateResources(id,summary,description);
+	public Result updateRes(HttpServletRequest request, ResourceEntity resInfo) {
+		int res = resService.update(resInfo);
 		return Result.success(res);
 	}
-	@ApiOperation(value="插入 resources Table 接口信息", notes="")
+	@ApiOperation(value="添加资源", notes="")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "主键标识", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "rm", value = "Resources Table 映射对象", required = true, dataType = "String")
+    	@ApiImplicitParam(name = "id", value = "主键标识", required = true, dataType = "String"),
+    	@ApiImplicitParam(name = "type", value = "接口类型", required = false, dataType = "String"),
+    	@ApiImplicitParam(name = "path", value = "接口地址", required = false, dataType = "String"),
+    	@ApiImplicitParam(name = "reqMethod", value = "请求方式", required = false, dataType = "String"),
+    	@ApiImplicitParam(name = "summary", value = "接口概要", required = false, dataType = "String"),
+        @ApiImplicitParam(name = "servicesName", value = "服务名", required = false, dataType = "String"),
+        @ApiImplicitParam(name = "pageName", value = "相关页面", required = false, dataType = "String"),
+        @ApiImplicitParam(name = "description", value = "接口详细说明", required = false, dataType = "String")
     })
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Result insertRes(ResourcesModel rm) {
+	public Result insertRes(ResourceEntity resInfo) {
+		Result rlt;
+		try {
+			int count = resService.insert(resInfo);
+			rlt = Result.success(count);
+		} catch (Exception e) {
+			rlt = Result.fail(ErrorConstants.SE_INTERNAL.getCode(), e.getCause().toString());
+		}
 		
-		List<ResourcesModel> insertLi = new ArrayList<>();
-		insertLi.add(rm);
-		
-		return resService.insertResources(insertLi);
+		return rlt;
 	}
-	@ApiOperation(value="删除 resources Table 接口信息，根据ID", notes="")
+	@ApiOperation(value="根据ID删除资源", notes="")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "主键标识", required = true, dataType = "String")
     })
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.DELETE)
 	public Result deleteRes(@QueryParam("id") String id) {
-		return resService.deleteById(id);
+		Result rlt;
+		try {
+			int count = resService.delete(id);
+			rlt = Result.success(count);
+		} catch (Exception e) {
+			rlt = Result.fail(ErrorConstants.SE_INTERNAL.getCode(), e.getCause().toString());
+		}
+		
+		return rlt;
+	}
+	@ApiOperation(value="获取资源所属服务的角色列表", notes="根据资源ID获取角色列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", value = "请求的页码", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "pageSize", value = "每面数量", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "resId", value = "资源id", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "serviceName", value = "服务标识", required = false, dataType = "String")
+    })
+	@ResponseBody
+	@RequestMapping(value="/roles", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	public Result getInRoles(HttpSession session, 
+			@QueryParam("page") int page, @QueryParam("pageSize") int pageSize, 
+			@QueryParam("resId") String resId, @QueryParam("serviceName") String serviceName) {
+		PageInfo<?> roleListPage = resService.getResourceRoles(page, pageSize, resId, serviceName);
+		Result rlt = null;
+		if (null == roleListPage) {
+			rlt = Result.fail(ErrorConstants.SE_INTERNAL.getCode(), "获取角色列表失败");
+		} else {
+			rlt = Result.success(roleListPage);
+		}
+		
+		return rlt;
 	}
 	@ApiOperation(value="权限验证", notes="检查用户是否拥有指定资源的权限")
     @ApiImplicitParams({
@@ -127,7 +186,7 @@ public class ResourcesController {
 	@RequestMapping(value = "/swaggerV2ApiPaths", method = RequestMethod.GET)
 	public Result swaggerV2ApiPaths(HttpServletRequest request) {
 		
-		List<ResourcesModel> res = null;
+		List<ResourceEntity> res = null;
 		Map<String, ConsoulServices> consoulInfos = consoulService.getInfos();
 		if(consoulInfos!=null) {
 			
@@ -142,26 +201,5 @@ public class ResourcesController {
 			}
 		}
 		return Result.success(res);
-	}
-	@ApiOperation(value="获取资源所属的角色列表", notes="根据资源ID获取角色列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "resId", value = "资源id", required = false, dataType = "String"),
-            @ApiImplicitParam(name = "page", value = "请求的页码", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "pageSize", value = "每面数量", required = true, dataType = "int")
-    })
-	@ResponseBody
-	@RequestMapping(value="/roles", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
-	public Result getInRoles(HttpSession session, 
-			@QueryParam("page") int page, @QueryParam("pageSize") int pageSize, 
-			@QueryParam("resId") String resId) {
-		PageInfo<?> roleListPage = resService.getResourceRoles(page, pageSize, resId);
-		Result rlt = null;
-		if (null == roleListPage) {
-			rlt = Result.fail(ErrorConstants.SE_INTERNAL.getCode(), "获取角色列表失败");
-		} else {
-			rlt = Result.success(roleListPage);
-		}
-		
-		return rlt;
 	}
 }

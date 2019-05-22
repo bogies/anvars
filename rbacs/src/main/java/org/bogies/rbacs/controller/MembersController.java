@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
 
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/member")
 /**
  * @Description: 用户管理接口
  * @author: Jerry
@@ -42,30 +42,6 @@ public class MembersController {
 	@Autowired
 	private MembersService userService;
 	
-	@ApiOperation(value="登录验证", notes="传统用户名和密码验证")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "用户名", required = false, dataType = "String"),
-            @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String"),
-    })
-	@ResponseBody
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public Result reqLogin(String username, String password) {
-		if (StringUtils.isBlank(username) || StringUtils.isEmpty(password)) {
-			return Result.fail(ErrorConstants.SE_REQ_PARAMS);
-		}
-		
-		MemberEntity user = userService.login(username, password);
-		Result rlt;
-		if (null != user) {
-			JWTPayloadEntity payload = new JWTPayloadEntity(user.getId(), user.getUsername());
-			user.setToken(jwtConfig.generateToken(payload));
-			rlt = Result.success(user);
-		} else {
-			rlt = Result.fail(ErrorConstants.SE_LOGIN_ERROR);
-		}
-		
-		return rlt;
-	}
 	@ApiOperation(value="web服务端验证", notes="通过签名认证")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "username", value = "用户名", required = false, dataType = "String"),
@@ -74,7 +50,7 @@ public class MembersController {
     })
 	@ResponseBody
 	@RequestMapping(value = "/service/login", method = RequestMethod.POST)
-	public Result webServerLogin(HttpServletRequest request, String serviceName, 
+	public Result serverLogin(HttpServletRequest request, String serviceName, 
 			long timestamp, String sign) {
 		long time = Math.abs(System.currentTimeMillis() - timestamp);
 		if (StringUtils.isBlank(serviceName)) {
@@ -110,82 +86,5 @@ public class MembersController {
 		PageInfo<MemberEntity> userList = userService.getUsers(filter, page, pageSize);
 		Result res = Result.success(userList);
 		return res;
-	}
-	@ApiOperation(value="添加用户", notes="")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="username", value="用户名", required = true, dataType="String"),
-            @ApiImplicitParam(name="nickname", value="姓名或昵称", required = true, dataType="String"),
-            @ApiImplicitParam(name="sort", value="排序值", required = true, dataType="int"),
-            @ApiImplicitParam(name="status", value="用户状态;1=正常;2=锁定", required = true, dataType="int")
-    })
-	@ResponseBody
-	@RequestMapping(value="", method = RequestMethod.POST)
-	public Result insertUser(HttpServletRequest request, MemberEntity member) {
-		//String operatorId = (String)request.getAttribute(RequestHeaderConstants.USER_ID);
-		Result res = userService.insert(member);
-		return res;
-	}
-	@ResponseBody
-	@RequestMapping(value="", method = RequestMethod.DELETE)
-	public Result deleteRes(HttpServletRequest request, @QueryParam("id") String id) {
-		
-		return userService.deleteById(id);
-	}
-	@ApiOperation(value="更新用户信息", notes="")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="id", value="用户id", required = false, dataType="String"),
-            @ApiImplicitParam(name="username", value="用户名", required = true, dataType="String"),
-            @ApiImplicitParam(name="nickname", value="姓名或昵称", required = true, dataType="String"),
-            @ApiImplicitParam(name="sort", value="排序值", required = true, dataType="int"),
-            @ApiImplicitParam(name="status", value="用户状态;1=正常;2=锁定", required = true, dataType="int")
-    })
-	@ResponseBody
-	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Result updateMember(MemberEntity members) {
-		return userService.update(members);
-	}
-	@ApiOperation(value="根据用户名统计用户数量", notes="用户添加时判断是否重名")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "用户名", required = false, dataType = "String"),
-    })
-	@ResponseBody
-	@RequestMapping(value = "/count/username", method = RequestMethod.GET)
-	public Result countByUsername(@QueryParam("username") String username) {
-		if (StringUtils.isBlank(username)) {
-			return Result.fail(ErrorConstants.SE_REQ_PARAMS);
-		}
-		
-		int count = userService.countByUsername(username);
-		Result rlt = Result.success(count);
-		
-		return rlt;
-	}
-	@ApiOperation(value="获取用户所属的角色列表", notes="")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = false, dataType = "String"),
-    })
-	@ResponseBody
-	@RequestMapping(value = "/roles", method=RequestMethod.GET)
-	public Result getUserRoles(@QueryParam("userId") String userId, 
-			@QueryParam("page") int page, @QueryParam("pageSize") int pageSize, 
-			HttpSession session) {
-		if (StringUtils.isBlank(userId)) {
-			return Result.fail(ErrorConstants.SE_REQ_PARAMS);
-		}
-		
-		Result rlt = null;
-		if (StringUtils.isBlank(userId)) {
-			rlt = Result.fail(ErrorConstants.SE_REQ_PARAMS.getCode(), "用户id不能为空");
-			logger.info(rlt.getMessage());
-		}
-		
-		PageInfo<?> roleList = userService.findRoles(page, pageSize, userId);
-		if (null != roleList) {
-			rlt = Result.success(roleList);
-		} else {
-			rlt = Result.fail(ErrorConstants.SE_INTERNAL.getCode(), "获取用户角色列表失败. UserID: "+userId);
-			logger.info(rlt.getMessage());
-		}
-		return rlt;
 	}
 }

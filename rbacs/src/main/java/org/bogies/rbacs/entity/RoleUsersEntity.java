@@ -1,11 +1,11 @@
-package org.bogies.rbacs.model;
+package org.bogies.rbacs.entity;
 
 /**
  * @Description: Mapping ResourcesModel from database role_users table
  * @author: renkun
  * @date: 2018年12月13日上午9:23:50
  */
-public class RoleUsersModel {
+public class RoleUsersEntity {
 	private String userId;
 	private String roleId;
 	

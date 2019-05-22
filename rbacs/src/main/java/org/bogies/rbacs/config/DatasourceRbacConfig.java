@@ -7,9 +7,9 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -20,24 +20,28 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 @Configuration
-@EnableTransactionManagement(mode = AdviceMode.ASPECTJ)
-@MapperScan(basePackages = {"org.bogies.rbacs.dao"})
+@EnableTransactionManagement
+@MapperScan(basePackages = {"org.bogies.rbacs.dao.rbac"}, sqlSessionFactoryRef="sqlSessionFactoryBean")
 /**
-` * @ClassName: DatasourceConfig
- * @Description: TODO
+` * @ClassName: DatasourceRbacConfig
+ * @Description: 权限控制数据源配置
  * @author: jerry
  * @date: 2018年12月12日 下午2:30:12
  */
-public class DatasourceConfig {
-    @Bean
-    @ConfigurationProperties(prefix = "spring.datasource")
+public class DatasourceRbacConfig {
+	@Primary
+    @Bean(name="datasourceRbac")
+    @ConfigurationProperties(prefix = "spring.datasource.rbac")
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
-    @Bean
+	@Primary
+	@Bean(name="sqlSessionFactoryBean")
     public SqlSessionFactory sqlSessionFactoryBean() throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource());
+        // 使用log4j2
+        org.apache.ibatis.logging.LogFactory.useLog4J2Logging();
         
         //分页插件
         PageHelper pageHelper = new PageHelper();
@@ -50,7 +54,7 @@ public class DatasourceConfig {
         sqlSessionFactoryBean.setPlugins(new Interceptor[]{pageHelper});
 
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:/mybatis/mapper/*.xml"));
+        sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:/mapper/rbac_*.xml"));
 
         return sqlSessionFactoryBean.getObject();
     }

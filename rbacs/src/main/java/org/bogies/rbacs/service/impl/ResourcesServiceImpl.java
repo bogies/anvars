@@ -4,27 +4,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
+import org.bogies.common.constants.ResourceConstants;
+import org.bogies.common.constants.RoleConstants;
+import org.bogies.common.utils.EncryptUtil;
+import org.bogies.rbacs.dao.rbac.ResourcesDao;
+import org.bogies.rbacs.entity.ResourceEntity;
+import org.bogies.rbacs.entity.RoleEntity;
+import org.bogies.rbacs.entity.SwaggerApiDocs;
+import org.bogies.rbacs.entity.SwaggerApiDocsPaths;
+import org.bogies.rbacs.service.ResourcesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.google.gson.Gson;
-
-import org.bogies.common.constants.ErrorConstants;
-import org.bogies.common.constants.RoleConstants;
-import org.bogies.common.entity.Result;
-import org.bogies.common.utils.EncryptUtil;
-import org.bogies.rbacs.dao.ResourcesDao;
-import org.bogies.rbacs.entity.SwaggerApiDocs;
-import org.bogies.rbacs.entity.SwaggerApiDocsPaths;
-import org.bogies.rbacs.model.ResourcesModel;
-import org.bogies.rbacs.model.RoleModel;
-import org.bogies.rbacs.service.ResourcesService;
-import org.apache.commons.lang3.StringUtils;
 
 @Service
 /**
@@ -37,26 +36,31 @@ public class ResourcesServiceImpl implements ResourcesService {
 	@Autowired
 	private ResourcesDao resDao;
 	
-	private Gson gson = new Gson();
-	
 	@Override
-	public Result insertResources(List<ResourcesModel> insertLi) {
-		
-		insertLi.forEach(args->{
-			String idMd5 = EncryptUtil.md5(args.getPath().toLowerCase()+args.getReqMethod().toLowerCase()+args.getServicesName());
-			args.setId(idMd5);
-		});
-		for (ResourcesModel rm : insertLi) {
-			if(resDao.existById(rm.getId())!=0) {
-				return Result.fail(ErrorConstants.SE_REQ_PARAMS.getCode(), "存在重复主键");
-			}
+	public int insert(ResourceEntity resInfo)  throws RuntimeException {
+		if (null == resInfo.getType()) {
+			throw new RuntimeException("请指定资源类型: API,PAGE,AUTH");
 		}
-		int res = resDao.insert(insertLi);
-		return Result.success(res);
+		resInfo.setType(resInfo.getType().toUpperCase());
+		if (StringUtils.isEmpty(resInfo.getId())) {
+			String id;
+			switch (resInfo.getType()) {
+			case ResourceConstants.TYPE_API:
+			case ResourceConstants.TYPE_PAGE:
+				id = EncryptUtil.md5(resInfo.getPath()+resInfo.getReqMethod()+resInfo.getServiceName());
+				break;
+			case ResourceConstants.TYPE_AUTH:
+				id = EncryptUtil.md5(UUID.randomUUID().toString());
+				break;
+			default:
+				throw new RuntimeException("请指定资源类型: API,PAGE,AUTH");
+			}
+			resInfo.setId(id);
+		}
+		return resDao.insert(resInfo);
 	}
 	@Override
-	public PageInfo<ResourcesModel> getResources(int page, int pageSize,ResourcesModel rm) {
-		
+	public PageInfo<ResourceEntity> getResources(int page, int pageSize, ResourceEntity filter) {
 		if (page < 1) {
 			page = 1;
 		}
@@ -64,10 +68,27 @@ public class ResourcesServiceImpl implements ResourcesService {
 			pageSize = 10;
 		}
 		PageHelper.startPage(page, pageSize);
-		PageInfo<ResourcesModel> pageInfo = null;
-		List<ResourcesModel> resourcesRecord = resDao.selectAll(rm);
+		PageInfo<ResourceEntity> pageInfo = null;
+		List<ResourceEntity> resourcesRecord = resDao.getResources(filter);
 		if (null != resourcesRecord) {
-			pageInfo = new PageInfo<ResourcesModel>(resourcesRecord);
+			pageInfo = new PageInfo<ResourceEntity>(resourcesRecord);
+		}
+		return pageInfo;
+	}
+	@Override
+	public PageInfo<ResourceEntity> getResourcesByUserId(int page, int pageSize, 
+			String userId, ResourceEntity filter) throws RuntimeException {
+		if (page < 1) {
+			page = 1;
+		}
+		if (pageSize < 1) {
+			pageSize = 10;
+		}
+		PageHelper.startPage(page, pageSize);
+		PageInfo<ResourceEntity> pageInfo = null;
+		List<ResourceEntity> resourcesRecord = resDao.getResourcesByUserId(userId, filter);
+		if (null != resourcesRecord) {
+			pageInfo = new PageInfo<ResourceEntity>(resourcesRecord);
 		}
 		return pageInfo;
 	}
@@ -82,28 +103,20 @@ public class ResourcesServiceImpl implements ResourcesService {
 		return (0 != count);
 	}
 	@Override
-	public int updateResources(String id, String summary, String description) {
-		return resDao.updateById(id,summary,description);
+	public int update(ResourceEntity resInfo) throws RuntimeException {
+		return resDao.update(resInfo);
 	}
 	@Override
-	public Result deleteById(String id) {
-		
-		Result rlt = null;
+	public int delete(String id) throws RuntimeException {
 		if (StringUtils.isBlank(id)) {
-			rlt = Result.fail(ErrorConstants.SE_INTERNAL.getCode(), "id null");
-		} else {
-			int deleteCount = resDao.deleteById(id);
-			if (deleteCount > 0) {
-				rlt = Result.success(id);
-			} else {
-				rlt = Result.fail(ErrorConstants.SE_INTERNAL.getCode(), "删除失败");
-			}
+			throw new RuntimeException("请设置要删除资源的ID");
 		}
 		
-		return rlt;
+		return resDao.delete(id);
 	}
 	@Override
-	public PageInfo<RoleModel> getResourceRoles(int page, int pageSize, String resId) {
+	public PageInfo<RoleEntity> getResourceRoles(int page, int pageSize, 
+			String resId, String serviceName) throws RuntimeException {
 		if (page < 1) {
 			page = 1;
 		}
@@ -111,21 +124,20 @@ public class ResourcesServiceImpl implements ResourcesService {
 			pageSize = 10;
 		}
 		PageHelper.startPage(page, pageSize);
-		PageInfo<RoleModel> roleListPage = null;
-		List<RoleModel> roleList = resDao.getInRoles(resId);
+		PageInfo<RoleEntity> roleListPage = null;
+		List<RoleEntity> roleList = resDao.getInRoles(resId, serviceName);
 		if (null != roleList) {
-			roleListPage = new PageInfo<RoleModel>(roleList);
+			roleListPage = new PageInfo<RoleEntity>(roleList);
 		}
 		
 		return roleListPage;
 	}
 	@Override
-	public List<ResourcesModel> extractSwaggerApiDocs(String httpRes,String servicesName) {
-
-		SwaggerApiDocs httpResJson = gson.fromJson(httpRes, SwaggerApiDocs.class);
+	public List<ResourceEntity> extractSwaggerApiDocs(String httpRes,String servicesName) {
+		SwaggerApiDocs httpResJson = JSON.parseObject(httpRes, SwaggerApiDocs.class);
 		Map<String, Map<String, SwaggerApiDocsPaths>> pathsMap = httpResJson.getPaths()==null?new HashMap<>():httpResJson.getPaths();
-		List<ResourcesModel> insertLi = new ArrayList<ResourcesModel>();
-		List<ResourcesModel> updateLi = new ArrayList<ResourcesModel>();
+		List<ResourceEntity> insertLi = new ArrayList<ResourceEntity>();
+		List<ResourceEntity> updateLi = new ArrayList<ResourceEntity>();
 		
 		for (String key : pathsMap.keySet()) {
 			
@@ -136,7 +148,7 @@ public class ResourcesServiceImpl implements ResourcesService {
 				method = method.toLowerCase();
 				
 				String idMd5 = EncryptUtil.md5(key+method+servicesName);
-				ResourcesModel vda = new ResourcesModel();
+				ResourceEntity vda = new ResourceEntity();
 				vda.setId(idMd5);
 				vda.setPath(key);
 				vda.setReqMethod(method);
@@ -144,23 +156,19 @@ public class ResourcesServiceImpl implements ResourcesService {
 				SwaggerApiDocsPaths swaggerV2ApiPaths = value.get(method);
 				
 				vda.setSummary(swaggerV2ApiPaths.getSummary());
-				vda.setServicesName(servicesName);
+				vda.setServiceName(servicesName);
 				vda.setDescription(swaggerV2ApiPaths.getDescription());
 				if(resDao.existById(idMd5)==0) {
-					insertLi.add(vda);
+					//insertLi.add(vda);
+					resDao.insert(vda);
 				}else {
 					updateLi.add(vda);
+					resDao.update(vda);
 				}
 				
 			}
 		}
 		
-		if(!insertLi.isEmpty()) {
-			resDao.insert(insertLi);
-		}
-		for (ResourcesModel resourcesTable : updateLi) {
-			resDao.updateById(resourcesTable);
-		}
 		logger.info("<==    Updates: "+updateLi.size());
 		updateLi.addAll(insertLi);
 		logger.info("总共： "+updateLi.size()+" 条记录");

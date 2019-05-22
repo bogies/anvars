@@ -28,17 +28,23 @@ var resourcesTpl = {
 				reqMethod: 'GET',
 				summary: '',
 				servicesName: '',
-				description: ''
+				pageName: '', 
+				description: '', 
+				extJson: ''
 			}
 		};
 	},
 	methods: {
 		refreshPage: function (page) {
 			var self = this;
-			Tmsp('/rbacs/resources?page=' + page + '&pageSize=10&path=' + self.searchParam.path +
+			var p = new tmspParams();
+            p.setService(SERVICE.RBACS);
+            p.setUrl('/resources?page=' + page + '&pageSize=10&path=' + self.searchParam.path +
 				"&reqMethod=" + self.searchParam.reqMethod + "&summary=" + self.searchParam.summary +
-				"&servicesName=" + self.searchParam.servicesName, 'get').then(function (result) {
-
+				"&servicesName=" + self.searchParam.servicesName);
+			p.setLoading({el: $("body")});
+			
+			Tmsp(p).then(function (result) {
 				console.log(result);
 				self.resourcesList = result.data;
 			}, function (error) {
@@ -56,8 +62,10 @@ var resourcesTpl = {
 				this.editResInfo.path = resInfo.path;
 				this.editResInfo.reqMethod = resInfo.reqMethod.toUpperCase();
 				this.editResInfo.summary = resInfo.summary;
-				this.editResInfo.servicesName = resInfo.servicesName;
+				this.editResInfo.serviceName = resInfo.serviceName;
+				this.editResInfo.pageName = resInfo.pageName;
 				this.editResInfo.description = resInfo.description;
+				this.editResInfo.extJson = resInfo.extJson;
 			} else {
 				dlgTitle = "添加";
 				tmspMethod = 'post';
@@ -66,8 +74,10 @@ var resourcesTpl = {
 				this.editResInfo.path = '';
 				this.editResInfo.reqMethod = 'GET';
 				this.editResInfo.summary = '';
-				this.editResInfo.servicesName = '';
+				this.editResInfo.serviceName = '';
+				this.editResInfo.pageName = '';
 				this.editResInfo.description = '';
+				this.editResInfo.extJson = '';
 			}
 			var self = this;
 			var dlgIndex = layer.open({
@@ -80,9 +90,15 @@ var resourcesTpl = {
 				btn: ["确认", "取消"],
 				content: layui.jquery("#editResourceDlg"),
 				yes: function () {
-					Tmsp('/rbacs/resources', tmspMethod, self.editResInfo).then(function (result) {
+					var p = new tmspParams();
+					p.setService(SERVICE.RBACS);
+					p.setUrl('/resources');
+					p.setMethod(tmspMethod);
+					p.setData(self.editResInfo);
+					p.setLoading({el: $("#editResourceDlg")});
+					Tmsp(p).then(function (result) {
 						if (result.code == 200) {
-							self.refreshPage(resourcesList.pageNum);
+							self.refreshPage(self.resourcesList.pageNum);
 							layer.close(dlgIndex);
 						} else {
 							layer.msg(result.message, {
@@ -108,7 +124,13 @@ var resourcesTpl = {
 					btn: ["确定", "取消"] //按钮
 				},
 				function () {
-					Tmsp('/rbacs/resources?id=' + resId, 'delete').then(function (result) {
+					var p = new tmspParams();
+					p.setService(SERVICE.RBACS);
+					p.setUrl('/resources?id=' + resId);
+					p.setMethod('DELETE');
+					p.setLoading({el: $("body")});
+
+					Tmsp(p).then(function (result) {
 						if (result.code == 200) {
 							layer.msg("删除成功", {
 								icon: 1,
@@ -142,7 +164,11 @@ var resourcesTpl = {
 				this.curResId = resId;
 			}
 			var self = this;
-			Tmsp('/rbacs/resources/roles?page='+page+'&pageSize=10&resId='+this.curResId, 'GET').then(function (result) {
+			var p = new tmspParams();
+			p.setService(SERVICE.RBACS);
+			p.setUrl('/resources/roles?page='+page+'&pageSize=10&resId='+this.curResId);
+			p.setLoading({el: $("#resRolesDlg")});
+			Tmsp(p).then(function (result) {
 				if (result.code == 200) {
 					self.resInRoles = result.data;
 				} else {
@@ -172,7 +198,12 @@ var resourcesTpl = {
 		}, 
 		deleteResFromRole: function(roleId) {
 			var self = this;
-			Tmsp('/rbacs/role/resources?roleId='+roleId+'&resIds='+this.curResId, 'DELETE').then(function (result) {
+			var p = new tmspParams();
+			p.setService(SERVICE.RBACS);
+			p.setUrl('/resources?roleId='+roleId+'&resIds='+this.curResId);
+			p.setMethod('DELETE');
+			p.setLoading({el: $("body")});
+			Tmsp(p).then(function (result) {
 				if (result.code == 200) {
 					ListUtils.remove(self.resInRoles.list, 'id', roleId);
 					if (self.resInRoles.list.length==0) {

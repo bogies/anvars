@@ -28,7 +28,7 @@ public class StartupListener implements ApplicationListener<ContextRefreshedEven
 	
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		ApplicationContext parent = event.getApplicationContext().getParent();
+		/*ApplicationContext parent = event.getApplicationContext().getParent();
 		if (null == parent) {
 			return;
 		}
@@ -45,6 +45,6 @@ public class StartupListener implements ApplicationListener<ContextRefreshedEven
 			LOGGER.info(JSON.toJSONString(customReq));
 			
 			loaded = true;
-		}
+		}*/
 	}
 }

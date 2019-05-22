@@ -70,7 +70,7 @@ public class ServicesController {
 		MemberEntity memberInfo = (MemberEntity)session.getAttribute(SessionParam.LOGIN_USER);
 		if (null != memberInfo) {
 			customReq.setUserId(memberInfo.getId());
-			customReq.setUsername(memberInfo.getUsername());
+			customReq.setUsername(memberInfo.getXm());
 		}
 		/// 要访问的服务
 		ServiceResult rlt = RequestService.requestService(customReq);

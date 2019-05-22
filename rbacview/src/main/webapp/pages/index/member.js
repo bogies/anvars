@@ -7,7 +7,9 @@ var memberTpl = {
             // 查找参数
             searchParam: {
                 username: '',
-                nickname: ''
+                xm: '', 
+                dwmc: '',
+                bmmc: ''
             },
             // 用户列表
             memberList: {
@@ -18,111 +20,23 @@ var memberTpl = {
             userInRoles: {
                 total: 0,
                 list: []
-            }, 
-            // 当前编辑的用户信息
-            editMemberInfo: {
-                id: '',
-                username: '',
-                nickname: '',
-                sort: '',
-                createTime: '',
-                updateTime: '',
-                admin: 0,
-                status: '1',
             }
         };
     },
     methods: {
         refreshPage: function (page) {
             var self = this;
-            Tmsp('/rbacs/members?page=' + page + '&pageSize=10&username=' + this.searchParam.username +
-                "&nickname=" + this.searchParam.nickname, 'get').then(function (result) {
+            var p = new tmspParams();
+            p.setService(SERVICE.RBACS);
+            p.setUrl('/member?page=' + page + '&pageSize=10&username=' + this.searchParam.username +
+            "&nickname=" + this.searchParam.nickname);
+            p.setLoading({el: $("body")});
+            Tmsp(p).then(function (result) {
                 console.log(result);
                 self.memberList = result.data;
             }, function (error) {
                 console.log(error);
             });
-        },
-        openEditMemberDlg: function (memberInfo) {
-            var dlgTitle;
-            var tmspMethod;
-            if (memberInfo) {
-                dlgTitle = '编辑';
-                tmspMethod = 'put';
-                this.editMemberInfo.id = memberInfo.id;
-                this.editMemberInfo.username = memberInfo.username;
-                this.editMemberInfo.nickname = memberInfo.nickname;
-                this.editMemberInfo.sort = memberInfo.sort;
-                this.editMemberInfo.isAdmin = memberInfo.isAdmin;
-                this.editMemberInfo.status = memberInfo.status;
-            } else {
-                dlgIndex = '添加';
-                tmspMethod = 'post';
-                this.editMemberInfo.id = '';
-                this.editMemberInfo.username = '';
-                this.editMemberInfo.nickname = '';
-                this.editMemberInfo.sort = '';
-                this.editMemberInfo.isAdmin = '0';
-                this.editMemberInfo.status = '1';
-            }
-            var self = this;
-            var dlgIndex = layer.open({
-                type: 1,
-                scrollbar: false,
-                area: ["500px", "450px"],
-                title: dlgTitle,
-                shadeClose: false,
-                btn: ["确认", "取消"],
-                content: layui.jquery("#editUserInfoDlg"),
-                yes: function () {
-                    Tmsp('/rbacs/members', tmspMethod, this.editMemberInfo).then(function (result) {
-                        if (result.code == 200) {
-                            self.refreshPage(self.memberList.pageNum);
-                            layer.close(dlgIndex);
-                        } else {
-                            layer.msg(result.message, {
-                                icon: 2,
-                                time: 1000
-                            });
-                        }
-
-                    }, function (reason) {
-                        layer.msg(reason.message, {
-                            icon: 2,
-                            time: 5000
-                        });
-                    });
-
-                }
-            });
-        },
-        deleteMember: function (resId) {
-            var self = this;
-            var dr = layer.confirm(
-                "确定要删除？", {
-                    btn: ["确定", "取消"] //按钮
-                },
-                function () {
-                    Tmsp('/rbacs/members?id=' + resId, 'delete').then(function (result) {
-                        if (result.code == 200) {
-                            layer.msg("删除成功", {
-                                icon: 1,
-                                time: 1000
-                            });
-                            self.refreshPage(self.memberList.pageNum);
-                            layer.close(dr);
-                        } else {
-                            layer.msg(result.message, {
-                                icon: 2,
-                                time: 1000
-                            });
-                        }
-
-                    }, function (error) {
-                        console.log(error);
-                    });
-                }
-            );
         },
         clearSearch: function () {
             this.searchParam = {
@@ -134,8 +48,12 @@ var memberTpl = {
 			if (userId) {
 				this.curUserId = userId;
 			}
-			var self = this;
-			Tmsp('/rbacs/members/roles?page='+page+'&pageSize=10&userId='+this.curUserId, 'GET').then(function (result) {
+            var self = this;
+            var p = new tmspParams();
+            p.setService(SERVICE.RBACS);
+            p.setUrl('/role/byuserid?page='+page+'&pageSize=10&userId='+this.curUserId);
+            p.setLoading({el: $("#userRolesDlg")});
+			Tmsp(p).then(function (result) {
 				if (result.code == 200) {
 					self.userInRoles = result.data;
 				} else {
@@ -164,8 +82,14 @@ var memberTpl = {
 			});
 		}, 
 		deleteUserFromRole: function(roleId) {
-			var self = this;
-			Tmsp('/rbacs/role/members?roleId='+roleId+'&userIds='+this.curUserId, 'DELETE').then(function (result) {
+            var self = this;
+            var p = new tmspParams();
+            p.setService(SERVICE.RBACS);
+            p.setUrl('/member?roleId='+roleId+'&userIds='+this.curUserId);
+            p.setMethod('DELETE');
+            p.setLoading({el: $("body")});
+
+			Tmsp(p).then(function (result) {
 				if (result.code == 200) {
                     ListUtils.remove(self.userInRoles.list, 'id', roleId);
                     if (self.userInRoles.list.length==0) {

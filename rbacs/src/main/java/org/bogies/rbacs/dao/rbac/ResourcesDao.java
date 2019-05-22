@@ -1,10 +1,10 @@
-package org.bogies.rbacs.dao;
+package org.bogies.rbacs.dao.rbac;
 
 import java.util.List;
 
-import org.bogies.rbacs.model.ResourcesModel;
-import org.bogies.rbacs.model.RoleModel;
 import org.apache.ibatis.annotations.Param;
+import org.bogies.rbacs.entity.ResourceEntity;
+import org.bogies.rbacs.entity.RoleEntity;
 
 /**
  * @Description: Database resources Table for this request
@@ -18,7 +18,8 @@ public interface ResourcesDao {
 	 * @param res
 	 * @return：List<ResourceModel>
 	 */
-	public List<ResourcesModel> selectAll(ResourcesModel rm);
+	public List<ResourceEntity> getResources(ResourceEntity filter);
+	public List<ResourceEntity> getResourcesByUserId(@Param("userId") String userId, @Param("filter") ResourceEntity filter);
 	/**
 	 * 检查用户资源权限
 	 * @param userId
@@ -30,42 +31,36 @@ public interface ResourcesDao {
 			@Param("anonymousId") String anonymousId);
 	public int checkPermitByRoleId(@Param("roleId") String userId, @Param("resId") String resId, 
 			@Param("anonymousId") String anonymousId);
-
-	/**根据 id 更新 resources记录
-	 * @param res
-	 * @return int
-	 */
-	public int updateById(@Param("id")String id, @Param("summary")String summary, @Param("description") String description);
 	/**
 	 * 根据 id 删除 resources记录
 	 * @param resId
 	 * @return：int
 	 */
-	public int deleteById(@Param("id") String id);
+	public int delete(@Param("id") String id);
 	
 	/**
 	 * TODO
 	 * @param resId
 	 * @return：List<RoleModel>
 	 */
-	public List<RoleModel> getInRoles(String resId);
+	public List<RoleEntity> getInRoles(@Param("resId") String resId, @Param("serviceName") String serviceName);
 	/**
 	 * Insert Batch Swagger related data
 	 * @param insertByBatch
 	 * @return：int
 	 */
-	public int insert(List<ResourcesModel> insertLi);
+	public int insert(ResourceEntity resInfo);
 	
 	/**Update Batch Swagger related data 
 	 * @param insertByBatch
 	 * @return int
 	 */
-	public void updateById(ResourcesModel resourcesTable);
+	public int update(ResourceEntity resInfo);
 	
 	/**TODO 根据path，req_method查询swagger_api中是否存在记录
 	 * @param path
 	 * @param reqMethod
 	 * @return int
 	 */
-	public int existById(@Param("idMd5") String idMd5);
+	public int existById(@Param("id") String id);
 }

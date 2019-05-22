@@ -47,7 +47,7 @@ public class ViewController {
 			customReq.setClientIP(clientIp);
 			if (null != userInfo) {
 				customReq.setUserId(userInfo.getId());
-				customReq.setUsername(userInfo.getUsername());
+				customReq.setUsername(userInfo.getXm());
 			}
 			ServiceResult rlt = RequestService.checkAuth(customReq, page);
 			if (!rlt.isReqSuccess()) {

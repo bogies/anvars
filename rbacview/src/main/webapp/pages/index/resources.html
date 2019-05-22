@@ -10,7 +10,7 @@
 					接口地址：
 					<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="searchParam.path" /> 接口概要：
 					<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="searchParam.summary" /> 服务名：
-					<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="searchParam.servicesName" />
+					<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="searchParam.serviceName" />
 					<a href="javascript:void(0)" v-on:click="refreshPage(1)" class="tablelink">搜索</a>
 					<a href="javascript:void(0)" v-on:click="clearSearch()" class="tablelink">清空</a>
 				</form>
@@ -31,7 +31,7 @@
 							<td>{{x.path}}</td>
 							<td>{{x.type}}</td>
 							<td>{{x.reqMethod}}</td>
-							<td>{{x.servicesName}}</td>
+							<td>{{x.serviceName}}</td>
 							<td>
 								<a href="javascript:void(0)" v-on:click="showRoles(1, x.id)" class="tablelink">角色</a>
 							</td>
@@ -44,7 +44,7 @@
 
 					</tbody>
 				</table>
-				<pagebar-simple :pageHelperData="resourcesList" v-on:gotoPage="refreshPage"></pagebar-simple>
+				<div id="resListPagebar" v-layui-pagebar="{pageData: resourcesList, jump: refreshPage}"></div>
 			</div>
 
 			<!-- 资源所属的角色列表 -->
@@ -78,9 +78,19 @@
 						<td>{{editResInfo.id}}</td>
 					</tr>
 					<tr>
+						<th style="height: 40px">服务名(区分大小写)：</th>
+						<td>
+							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editResInfo.serviceName" />
+						</td>
+					</tr>
+					<tr>
 						<th style="height: 40px">接口类型：</th>
 						<td>
-							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editResInfo.type" />
+							<select v-model="editResInfo.type">
+								<option value="API">API</option>
+								<option value="PAGE">页面</option>
+								<option value="AUTH">权限</option>
+							</select>
 						</td>
 					</tr>
 					<tr>
@@ -101,21 +111,28 @@
 						</td>
 					</tr>
 					<tr>
+						<th style="height: 40px">权限对应标识：</th>
+						<td>
+							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editResInfo.pageName" />
+						</td>
+					</tr>
+					<tr>
 						<th style="height: 40px">接口概要：</th>
 						<td>
 							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editResInfo.summary" />
 						</td>
 					</tr>
-					<tr>
-						<th style="height: 40px">服务名(区分大小写)：</th>
-						<td>
-							<input type="text" style="width: 200px;border:1px solid #ccc;height: 25px;" v-model="editResInfo.servicesName" />
-						</td>
-					</tr>
+					
 					<tr>
 						<th style="height: 40px">接口详细说明：</th>
 						<td>
 							<textarea style="width: 200px;border:1px solid #ccc;height: 60px;" v-model="editResInfo.description"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<th style="height: 40px">扩展参数(json)：</th>
+						<td>
+							<textarea style="width: 200px;border:1px solid #ccc;height: 60px;" v-model="editResInfo.extJson"></textarea>
 						</td>
 					</tr>
 				</table>

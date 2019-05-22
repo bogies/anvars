@@ -45,6 +45,9 @@ public class Result {
 	public static Result fail(int code, String msg) {
 		return new Result(code, msg);
 	}
+	public static Result fail(String msg) {
+		return new Result(ErrorConstants.SE_INTERNAL.getCode(), msg);
+	}
 	
 	public int getCode() {
 		return code;

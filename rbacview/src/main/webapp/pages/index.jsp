@@ -4,9 +4,9 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-      <title>${webConfig.TITLE}</title>
-      <%@ include file="../../webkits.jsp" %>
-      <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=1">
+        <title>${webConfig.TITLE}</title>
+        <%@ include file="../../webkits.jsp" %>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=1">
     </head>
 
     <body>
@@ -34,10 +34,9 @@
                     </li>
                 </ul>
             </div>
-          <router-view></router-view>
+            <router-view></router-view>
         </div>
     
-        <%@ include file="../pagebar/simple.html" %>
         <%@ include file="./index/resources.html" %>
         <%@ include file="./index/member.html" %>
         <%@ include file="./index/role.html" %>

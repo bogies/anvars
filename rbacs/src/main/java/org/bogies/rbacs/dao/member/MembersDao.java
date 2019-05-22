@@ -1,9 +1,9 @@
-package org.bogies.rbacs.dao;
+package org.bogies.rbacs.dao.member;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.bogies.common.entity.MemberEntity;
-import org.bogies.rbacs.model.RoleModel;
+import org.bogies.rbacs.entity.RoleEntity;
 
 /**
  * @Description: TODO
@@ -15,9 +15,21 @@ public interface MembersDao {
 	/**
 	 * 根据查找条件获取用户信息
 	 * @param filter
-	 * @return：List<MembersEntity>
+	 * @return：用户列表
 	 */
-	public List<MemberEntity> getUsers(@Param("filter") MemberEntity filter);
+	public List<MemberEntity> getUsers(MemberEntity filter);
+	/**
+	 * 获取指定id列表中的用户列表
+	 * @param ids 用户ID列表
+	 * @return 用户列表
+	 */
+	public List<MemberEntity> getIncludeMembers(@Param("ids") String ids);
+	/**
+	 * 获取排除指定id列表的用户列表
+	 * @param ids 要排除的用户ID列表
+	 * @return 用户列表
+	 */
+	public List<MemberEntity> getExcludeMembers(@Param("ids") String ids);
 	/**
 	 * 添加用户
 	 * @param loginUser
@@ -64,7 +76,7 @@ public interface MembersDao {
 	 * @param user
 	 * @return：List<RoleModel>
 	 */
-	List<RoleModel> findRoles(@Param("userId") String userId);
+	List<RoleEntity> findRoles(@Param("userId") String userId);
 	/**
 	 * 修改用户基本信息
 	 * @param loginUser
